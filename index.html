@@ -221,6 +221,7 @@
             z-index: 2;
         }
 
+        /* ŞİMDİ ÇALIYOR BAR - GÜNCELLENMİŞ (Ses kontrolü eklendi) */
         .now-playing-bar {
             position: fixed;
             bottom: 0;
@@ -302,7 +303,7 @@
             transform: scale(1.02);
         }
         .progress-area {
-            flex: 2;
+            flex: 1.5;
             min-width: 200px;
             display: flex;
             align-items: center;
@@ -327,11 +328,60 @@
             border-radius: 5px;
             position: relative;
         }
+        
+        /* SES AYARLAMA BÖLÜMÜ - YENİ */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #1a1d2b;
+            padding: 5px 12px;
+            border-radius: 30px;
+            border: 1px solid #2d2f3e;
+            transition: all 0.2s;
+        }
+        .volume-control:hover {
+            border-color: #ec4899;
+        }
+        .volume-icon {
+            color: #f472b6;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .volume-icon:hover {
+            color: #ec4899;
+            transform: scale(1.05);
+        }
+        .volume-slider {
+            width: 90px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #2d2f3e;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ec4899;
+            cursor: pointer;
+            box-shadow: 0 0 5px #ec4899;
+        }
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        .volume-value {
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            min-width: 38px;
+            text-align: center;
+        }
 
-        @media (max-width: 700px) {
-            .app {
-                padding: 15px 20px 100px 20px;
-            }
+        @media (max-width: 900px) {
             .now-playing-bar {
                 flex-direction: column;
                 align-items: stretch;
@@ -339,6 +389,15 @@
             }
             .progress-area {
                 width: 100%;
+            }
+            .volume-control {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+        }
+        @media (max-width: 700px) {
+            .app {
+                padding: 15px 20px 100px 20px;
             }
         }
         footer {
@@ -376,7 +435,7 @@
 
     <div class="welcome-msg">
         <i class="fas fa-headphones" style="margin-right: 8px; color:#ec4899;"></i> 
-        🎵 Ridvanify'a hoş geldin! Ridvani'nin özel şarkıları burada. 
+        🎵 Ridvanify'a hoş geldin! Ridvani'nin özel şarkıları burada. Ses seviyesini ayarlayabilirsin.
     </div>
 
     <div class="categories" id="categoriesContainer"></div>
@@ -392,9 +451,10 @@
         <span>Keşfet | Günün Hitleri</span>
     </div>
     <div class="grid-cards" id="discoverGrid"></div>
-    <footer>🎵 Ridvanify · Özel Müzik Deneyimi · Ridvani & Lovesmasher</footer>
+    <footer>🎵 Ridvanify · Özel Müzik Deneyimi · Ridvani & Lovesmasher · Ses Kontrolü</footer>
 </div>
 
+<!-- ŞİMDİ ÇALIYOR BAR (ses ayarı eklendi) -->
 <div class="now-playing-bar" id="nowPlayingBar">
     <div class="track-info">
         <div class="track-icon" id="trackIcon">
@@ -416,6 +476,12 @@
             <div class="progress-filled" id="progressFilled"></div>
         </div>
         <span class="time-duration" id="durationTime">0:00</span>
+    </div>
+    <!-- SES AYARLAMA BÖLÜMÜ -->
+    <div class="volume-control">
+        <i class="fas fa-volume-up volume-icon" id="volumeIcon"></i>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80">
+        <span class="volume-value" id="volumeValue">80%</span>
     </div>
 </div>
 
@@ -446,7 +512,7 @@
         }
     ];
 
-    // MÜZİK VERİTABANI (Ridvani özel şarkılar en üstte olacak)
+    // MÜZİK VERİTABANI (Ridvani özel şarkılar en üstte)
     const SONGS_DB = [
         ...RIDVANI_SONGS,
         { id: 1, title: "Blinding Lights", artist: "The Weeknd", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", coverIcon: "fa-sun", duration: 210 },
@@ -466,6 +532,10 @@
     let audio = new Audio();
     let isPlaying = false;
 
+    // Ses ayarı değişkenleri
+    let currentVolume = 80; // yüzde olarak
+    audio.volume = currentVolume / 100;
+
     // DOM elementleri
     const popularGrid = document.getElementById('popularGrid');
     const discoverGrid = document.getElementById('discoverGrid');
@@ -481,11 +551,67 @@
     const currentTimeSpan = document.getElementById('currentTime');
     const durationTimeSpan = document.getElementById('durationTime');
     const trackIconDiv = document.getElementById('trackIcon');
+    
+    // Ses kontrolleri DOM
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeValueSpan = document.getElementById('volumeValue');
+    const volumeIcon = document.getElementById('volumeIcon');
 
     // Kategoriler (Ridvani özel kategorisi eklendi)
     const categoriesList = ["Tümü", "ridvani", "pop", "soul", "rnb", "funk", "hiphop"];
     let activeCategory = "Tümü";
 
+    // ========== SES AYARI FONKSİYONLARI ==========
+    function updateVolumeUI() {
+        volumeSlider.value = currentVolume;
+        volumeValueSpan.textContent = Math.round(currentVolume) + "%";
+        audio.volume = currentVolume / 100;
+        // Ses simgesini güncelle
+        if (currentVolume === 0) {
+            volumeIcon.className = "fas fa-volume-mute volume-icon";
+        } else if (currentVolume < 30) {
+            volumeIcon.className = "fas fa-volume-off volume-icon";
+        } else if (currentVolume < 70) {
+            volumeIcon.className = "fas fa-volume-down volume-icon";
+        } else {
+            volumeIcon.className = "fas fa-volume-up volume-icon";
+        }
+    }
+
+    function setVolume(value) {
+        let newVolume = Math.min(100, Math.max(0, parseFloat(value)));
+        if (isNaN(newVolume)) newVolume = 80;
+        currentVolume = newVolume;
+        updateVolumeUI();
+    }
+
+    function toggleMute() {
+        if (currentVolume > 0) {
+            // Ses kapat: önceki sesi hatırla (0 ise zaten kapalı)
+            if (currentVolume !== 0) {
+                audio.setAttribute('data-prev-volume', currentVolume);
+                setVolume(0);
+            } else {
+                setVolume(80);
+            }
+        } else {
+            // Sesi geri aç
+            let prevVol = audio.getAttribute('data-prev-volume');
+            if (prevVol && prevVol > 0) {
+                setVolume(parseFloat(prevVol));
+            } else {
+                setVolume(80);
+            }
+        }
+    }
+
+    // Volume slider event
+    volumeSlider.addEventListener('input', (e) => {
+        setVolume(e.target.value);
+    });
+    volumeIcon.addEventListener('click', toggleMute);
+
+    // ========== MÜZİK ÇALAR FONKSİYONLARI ==========
     function renderCategories() {
         categoriesDiv.innerHTML = '';
         const displayNames = {
@@ -574,14 +700,12 @@
 
     function filterAndRenderSongs() {
         const filtered = filterSongs();
-        // İlk 6'sı popüler/özel bölümü, kalanı keşfet
         const popularOnes = filtered.slice(0, 6);
         const discoverOnes = filtered.length > 6 ? filtered.slice(6, 12) : filtered.slice(0, filtered.length);
         
         renderGrid(popularGrid, popularOnes);
         renderGrid(discoverGrid, discoverOnes);
         
-        // Eğer şu an çalan şarkı filtrelenmiş listede yoksa yenile
         if (!filtered.some(s => s.id === currentPlaylist[currentIndex]?.id)) {
             if(filtered.length > 0) setPlaylistAndPlay(filtered, 0, true);
             else resetPlayer();
@@ -750,10 +874,11 @@
         filterAndRenderSongs();
         const allFiltered = filterSongs();
         if(allFiltered.length) {
-            // Başlangıçta Ridvani şarkılarından birini seç (Patlaticam)
             const ridvaniIndex = allFiltered.findIndex(s => s.id === 999);
             setPlaylistAndPlay(allFiltered, ridvaniIndex !== -1 ? ridvaniIndex : 0, false);
         }
+        // Ses ayarını başlat
+        updateVolumeUI();
     }
     
     init();

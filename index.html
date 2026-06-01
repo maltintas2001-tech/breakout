@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Ridvanify</title>
+<title>Ridvanify - Zindan Senfonisi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -907,7 +907,7 @@ body::after {
 
 <script>
 // ═══════════════════════════════════════════════
-//  DATA
+//  DATA - Zindan Senfonisi eklendi
 // ═══════════════════════════════════════════════
 const SONGS = [
   {
@@ -917,35 +917,7 @@ const SONGS = [
     icon:"fa-bomb", img:"ridvani_patlaticam.png",
     exclusive:true,
     lyrics:[
-      { lines: [
-      "ridvani patlaticam",
-      "ridvani patlaticam",
-      "pat-pat-pat-pat-patlaticam!",
-      "",
-
-      "ridvani patlaticam",
-      "ridvani patlaticam",
-      "ridvani patlaticam",
-      "",
-
-      "(pat-pat-pat-pat-pat-pat)",
-      "pat-pat-patlaticam",
-      "",
-
-      "ridvani patlaticam",
-      "ridvani patlaticam",
-      "ridvani patlaticam",
-      "pat-pat-pat-pat-patlaticam",
-      "",
-
-      "♫",
-      "",
-      "patlaticam!",
-      "",
-      "♫",
-      "",
-      "(pat-pat-pat-pat) pat-patlaticam!"
-    ] }
+      { label:"Verse", lines: ["ridvani patlaticam","ridvani patlaticam","pat-pat-pat-pat-patlaticam!","","ridvani patlaticam","ridvani patlaticam","ridvani patlaticam","","(pat-pat-pat-pat-pat-pat)","pat-pat-patlaticam","","ridvani patlaticam","ridvani patlaticam","ridvani patlaticam","pat-pat-pat-pat-patlaticam","","♫","","patlaticam!","","♫","","(pat-pat-pat-pat) pat-patlaticam!"] }
     ]
   },
   {
@@ -954,14 +926,7 @@ const SONGS = [
     src:"https://files.catbox.moe/opqrw6.mp3",
     icon:"fa-heart-crack", img:"lovesmash.png",
     exclusive:true,
-    lyrics:[
-      { label:"Giriş", lines:["","",""] },
-      { label:"Kıta 1", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Kıta 2", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Outro", lines:["","",""] }
-    ]
+    lyrics:[ { label:"Nakarat", lines:["Aşk ezilir","Kalpler kırılır","Ridvan vurur","Lovesmasher"] } ]
   },
   {
     id:3, title:"Rido & Enes Diss", artist:"Rido, Enes",
@@ -969,111 +934,70 @@ const SONGS = [
     src:"https://files.catbox.moe/v3zmt1.mp3",
     icon:"fa-skull-crossbones", img:"ridoenesdiss.png",
     exclusive:true, diss:true,
-    lyrics:[
-      { label:"Giriş", lines:["","",""] },
-      { label:"Kıta 1 – Rido", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kıta 2 – Enes", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kapanış", lines:["","",""] }
+    lyrics:[ { label:"Diss", lines:["Sokak konuşur","Rido ve Enes","Beat çarpar","Sözler sert"] } ]
+  },
+  {
+    id:4, title:"Zindan Senfonisi", artist:"Berkay",
+    category:"ridvani",
+    src:"https://files.catbox.moe/ybvp1z.mp3",
+    icon:"fa-dungeon", img:"zindan_senfonisi.png",
+    exclusive:true,
+    lyrics: [
+      { label:"Verse 1", lines: ["Rıdvan sokaklarda dolaşır sessiz adım,","Ayak parmağı taşta, yine de devam yarın.","Garanti banka ekranında rakamlar akar,","Paribu ve Binance arasında döviz savrular.","","İzolasyon odasında düşünceler zindan,","Aptal kararlar bıraktı izleri her yandan.","Carpediem derken geçti yıllar bir anda,","Papatya soldu bazen betonun yanında."] },
+      { label:"Nakarat", lines: ["Bu bir parti değil, hayatın provası,","Savaş gibi günler, yok bunun molası.","Willy Wonka düşleri gerçeklere çarpar,","Karanlıkta yürürken umut yine parlar."] },
+      { label:"Verse 2", lines: ["Anneler bekler hâlâ ışığı pencerede,","Kimi kaybolmuş gider kendi bilmecesinde.","Sürtük dedikleri sözler havada kalır,","İnsan insanı kırar, sonra yalnız kalır.","","Döviz yükselir, düşer, şehir aynı şehir,","Zindan gibi sokaklar bazen ağır gelir.","Papatya filiz verir çatlamış asfaltta,","Carpediem yankılanır gecenin ortasında."] },
+      { label:"Bridge", lines: ["Bir adım ileri, iki adım geri,","Kimse bilmiyor sonunu bu filmin.","Savaş içimizde, sessiz ve derin,","Yine de devam eder hikâyemiz."] },
+      { label:"Nakarat", lines: ["Bu bir parti değil, hayatın provası,","Savaş gibi günler, yok bunun molası.","Willy Wonka düşleri gerçeklere çarpar,","Karanlıkta yürürken umut yine parlar."] },
+      { label:"End", lines: ["Zindan susar, nefes alır şehir,","Ridvan'ın izi kalır bu gecede."] }
     ]
   },
   {
-    id:4, title:"Blinding Lights", artist:"The Weeknd",
+    id:5, title:"Blinding Lights", artist:"The Weeknd",
     category:"pop", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     icon:"fa-sun",
-    lyrics:[
-      { label:"Kıta 1", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Kıta 2", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Bridge", lines:["","",""] }
-    ]
+    lyrics:[{ label:"Kıta", lines:["I'm blinded by the lights","No, I can't sleep until I feel your touch"] }]
   },
   {
-    id:5, title:"Rolling in the Deep", artist:"Adele",
+    id:6, title:"Rolling in the Deep", artist:"Adele",
     category:"pop", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     icon:"fa-water",
-    lyrics:[
-      { label:"Kıta 1", lines:["","",""] },
-      { label:"Pre-Nakarat", lines:["",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kıta 2", lines:["","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Bridge", lines:["","","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["We could have had it all","Rolling in the deep"] }]
   },
   {
-    id:6, title:"Lose Control", artist:"Teddy Swims",
+    id:7, title:"Lose Control", artist:"Teddy Swims",
     category:"soul", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     icon:"fa-heart",
-    lyrics:[
-      { label:"Giriş", lines:["",""] },
-      { label:"Kıta 1", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kıta 2", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","",""] }
-    ]
+    lyrics:[{ label:"Verse", lines:["Losing control","Can't help myself"] }]
   },
   {
-    id:7, title:"Houdini", artist:"Dua Lipa",
+    id:8, title:"Houdini", artist:"Dua Lipa",
     category:"pop", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
     icon:"fa-wand-sparkles",
-    lyrics:[
-      { label:"Kıta 1", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Kıta 2", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["Houdini, I come and go"] }]
   },
   {
-    id:8, title:"Starboy", artist:"The Weeknd",
+    id:9, title:"Starboy", artist:"The Weeknd",
     category:"rnb", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     icon:"fa-rocket",
-    lyrics:[
-      { label:"Giriş", lines:["",""] },
-      { label:"Kıta 1", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","",""] },
-      { label:"Kıta 2", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["I'm a Starboy","Look what you've done"] }]
   },
   {
-    id:9, title:"Levitating", artist:"Dua Lipa",
+    id:10, title:"Levitating", artist:"Dua Lipa",
     category:"pop", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     icon:"fa-star",
-    lyrics:[
-      { label:"Kıta 1", lines:["","","",""] },
-      { label:"Pre-Nakarat", lines:["","",""] },
-      { label:"Nakarat", lines:["","","","",""] },
-      { label:"Kıta 2", lines:["","","",""] },
-      { label:"Nakarat", lines:["","","","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["You got me levitating","Baby, let me take you high"] }]
   },
   {
-    id:10, title:"Uptown Funk", artist:"Bruno Mars",
+    id:11, title:"Uptown Funk", artist:"Bruno Mars",
     category:"funk", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
     icon:"fa-drumstick-bite",
-    lyrics:[
-      { label:"Giriş", lines:["",""] },
-      { label:"Kıta 1", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kıta 2", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Bridge", lines:["","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["Uptown funk you up"] }]
   },
   {
-    id:11, title:"Rockstar", artist:"Post Malone",
+    id:12, title:"Rockstar", artist:"Post Malone",
     category:"hiphop", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
     icon:"fa-guitar",
-    lyrics:[
-      { label:"Giriş", lines:["",""] },
-      { label:"Kıta 1", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] },
-      { label:"Kıta 2", lines:["","","","",""] },
-      { label:"Nakarat", lines:["","","",""] }
-    ]
+    lyrics:[{ label:"Nakarat", lines:["I feel just like a rockstar"] }]
   }
 ];
 
@@ -1110,7 +1034,7 @@ audio.volume = 0.75;
 // ═══════════════════════════════════════════════
 function renderLibrary(){
   const el = document.getElementById('libraryList');
-  el.innerHTML = SONGS.slice(0,7).map(s=>`
+  el.innerHTML = SONGS.slice(0,8).map(s=>`
     <div class="lib-item" data-sid="${s.id}">
       <div class="lib-icon ${s.exclusive?'special':'regular'}">
         <i class="fas ${s.icon}"></i>
@@ -1159,7 +1083,6 @@ function filtered(){
 
 function cardHTML(s, animDelay=0){
   const isPlaying = playlist[idx]?.id===s.id && playing;
-  const isPaused  = playlist[idx]?.id===s.id && !playing;
   const isCurrent = playlist[idx]?.id===s.id;
   return `
     <div class="music-card ${isCurrent?'is-playing':''}" data-sid="${s.id}" style="animation-delay:${animDelay}ms">
@@ -1201,7 +1124,6 @@ function renderGrids(){
   const ridvani = list.filter(s=>s.category==='ridvani');
   const others  = list.filter(s=>s.category!=='ridvani');
 
-  // section 1 title
   const s1title = document.getElementById('section1Title');
   if(activeCategory==='ridvani' || activeCategory==='Tümü'){
     s1title.textContent = '🔥 Ridvani Exclusive';
@@ -1218,7 +1140,6 @@ function renderGrids(){
     sec2.style.display='none';
   }
 
-  // bind clicks
   document.querySelectorAll('.music-card[data-sid]').forEach(card=>{
     card.addEventListener('click',()=>{
       const sid = parseInt(card.dataset.sid);
@@ -1266,7 +1187,6 @@ function updatePlayerUI(song){
   document.getElementById('timeCurrent').textContent='0:00';
   document.getElementById('timeTotal').textContent = song.duration ? fmt(song.duration) : '0:00';
   document.getElementById('progressFill').style.width='0%';
-  // lyrics panel meta
   document.getElementById('lyricsPanelSong').textContent = song.title;
   document.getElementById('lyricsPanelArtist').textContent = song.artist;
   document.getElementById('lyricsSongName').textContent = song.title;
@@ -1308,7 +1228,6 @@ function prev(){
   loadSong(playing);
 }
 
-// progress
 audio.addEventListener('timeupdate',()=>{
   if(!audio.duration||isNaN(audio.duration)) return;
   const pct = (audio.currentTime/audio.duration)*100;
@@ -1329,11 +1248,9 @@ document.getElementById('progressTrack').addEventListener('click',e=>{
   if(audio.duration) audio.currentTime=pct*audio.duration;
 });
 
-// controls
 document.getElementById('playBtn').addEventListener('click', togglePlay);
 document.getElementById('prevBtn').addEventListener('click', prev);
 document.getElementById('nextBtn').addEventListener('click', next);
-
 document.getElementById('shuffleBtn').addEventListener('click',()=>{
   shuffle=!shuffle;
   document.getElementById('shuffleBtn').classList.toggle('active',shuffle);
@@ -1342,7 +1259,6 @@ document.getElementById('repeatBtn').addEventListener('click',()=>{
   repeat=!repeat;
   document.getElementById('repeatBtn').classList.toggle('active',repeat);
 });
-
 document.getElementById('heartBtn').addEventListener('click',()=>{
   const song = playlist[idx];
   if(!song) return;
@@ -1350,7 +1266,6 @@ document.getElementById('heartBtn').addEventListener('click',()=>{
   document.getElementById('heartBtn').classList.toggle('liked', liked.has(song.id));
 });
 
-// volume
 const volSlider = document.getElementById('volSlider');
 const volIcon   = document.getElementById('volIcon');
 let lastVol = 75;
@@ -1370,7 +1285,6 @@ function updateVolIcon(v){
   else i.className='fas fa-volume-high';
 }
 
-// search
 document.getElementById('searchInput').addEventListener('input',renderGrids);
 
 // ═══════════════════════════════════════════════
@@ -1403,7 +1317,7 @@ function renderLyricsContent(song){
   content.innerHTML = `<div class="lyrics-verses">${
     song.lyrics.map((verse, vi)=>`
       <div class="verse-block" style="animation-delay:${vi*80}ms">
-        <div class="verse-label">${esc(verse.label)}</div>
+        <div class="verse-label">${esc(verse.label||'Bölüm')}</div>
         <div class="verse-lines">${
           verse.lines.map(line=>
             line.trim()

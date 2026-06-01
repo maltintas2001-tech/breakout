@@ -1,1036 +1,721 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NŌVA — Premium Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0c0c0c;
-  --bg2: #141414;
-  --bg3: #1a1a1a;
-  --surface: #1e1e1e;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(255,255,255,0.18);
-  --text: #f0ede8;
-  --text-muted: #8a8580;
-  --text-dim: #4a4845;
-  --accent: #c9a96e;
-  --accent2: #e8c99a;
-  --red: #c0392b;
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Melodify | Akışta Müzik</title>
+    <!-- Google Fonts & Modern Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a0c10 0%, #0f1117 100%);
+            color: #eef2ff;
+            overflow-x: hidden;
+        }
 
-html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1f2c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 10px;
+        }
 
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-  cursor: none;
-}
+        .app {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 30px 100px 30px;
+        }
 
-/* Custom Cursor */
-#cursor {
-  position: fixed; width: 8px; height: 8px;
-  background: var(--accent); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
-  mix-blend-mode: normal;
-}
-#cursor-ring {
-  position: fixed; width: 32px; height: 32px;
-  border: 1px solid rgba(201,169,110,0.5); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: all 0.12s var(--ease);
-}
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 14px; height: 14px; }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 48px; height: 48px; border-color: var(--accent); }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(79, 70, 229, 0.25);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo i {
+            font-size: 34px;
+            background: linear-gradient(135deg, #c084fc, #4f46e5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .search-bar {
+            background: #1a1d2b;
+            border-radius: 60px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 320px;
+            backdrop-filter: blur(8px);
+            border: 1px solid #2d2f3e;
+            transition: all 0.2s;
+        }
+        .search-bar:focus-within {
+            border-color: #818cf8;
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.3);
+        }
+        .search-bar i {
+            color: #9ca3af;
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-size: 0.95rem;
+            color: white;
+            outline: none;
+        }
+        .user-icon {
+            background: #2d2f3e;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-/* Page Loader */
-#loader {
-  position: fixed; inset: 0; background: var(--bg);
-  z-index: 9000; display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 24px;
-  transition: opacity 0.8s var(--ease), visibility 0.8s;
-}
-#loader.hidden { opacity: 0; visibility: hidden; }
-.loader-logo { font-family: var(--font-display); font-size: 48px; letter-spacing: 12px; color: var(--text); font-weight: 300; }
-.loader-bar-wrap { width: 160px; height: 1px; background: var(--border); overflow: hidden; }
-.loader-bar { height: 100%; background: var(--accent); width: 0; animation: loadBar 1.8s var(--ease) forwards; }
-@keyframes loadBar { to { width: 100%; } }
+        .categories {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .cat-btn {
+            background: transparent;
+            border: 1px solid #2d2f3e;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+        }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            margin: 30px 0 18px 0;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title i {
+            font-size: 1.6rem;
+            color: #818cf8;
+        }
 
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 0 48px;
-  height: 72px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid transparent;
-  transition: all 0.4s var(--ease);
-  backdrop-filter: blur(0px);
-}
-nav.scrolled {
-  background: rgba(12,12,12,0.92);
-  border-bottom-color: var(--border);
-  backdrop-filter: blur(20px);
-}
-.nav-logo {
-  font-family: var(--font-display); font-size: 26px; letter-spacing: 8px;
-  color: var(--text); text-decoration: none; font-weight: 300;
-}
-.nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a {
-  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--text-muted); text-decoration: none;
-  transition: color 0.3s; position: relative;
-}
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-  height: 1px; background: var(--accent); transform: scaleX(0);
-  transform-origin: left; transition: transform 0.3s var(--ease);
-}
-.nav-links a:hover { color: var(--text); }
-.nav-links a:hover::after { transform: scaleX(1); }
-.nav-actions { display: flex; gap: 20px; align-items: center; }
-.nav-icon {
-  background: none; border: none; color: var(--text-muted); cursor: pointer;
-  font-size: 18px; transition: color 0.3s; position: relative; padding: 4px;
-}
-.nav-icon:hover { color: var(--text); }
-.cart-count {
-  position: absolute; top: -2px; right: -6px;
-  width: 16px; height: 16px; background: var(--accent); border-radius: 50%;
-  font-size: 9px; font-family: var(--font-body); color: var(--bg);
-  display: flex; align-items: center; justify-content: center; font-weight: 500;
-  opacity: 0; transform: scale(0); transition: all 0.3s var(--ease-spring);
-}
-.cart-count.visible { opacity: 1; transform: scale(1); }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .music-card {
+            background: #141824;
+            border-radius: 20px;
+            padding: 16px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: 1px solid #24283a;
+            backdrop-filter: blur(2px);
+        }
+        .music-card:hover {
+            transform: translateY(-6px);
+            background: #1c2130;
+            border-color: #4f46e5;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
+        }
+        .card-img {
+            background: linear-gradient(145deg, #2a2e42, #1a1e2c);
+            border-radius: 16px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            color: #c084fc;
+            margin-bottom: 14px;
+            transition: 0.2s;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+        .music-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .music-card p {
+            font-size: 0.8rem;
+            color: #a0a5c0;
+            margin-top: 5px;
+        }
+        .play-hint {
+            font-size: 0.7rem;
+            margin-top: 10px;
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4f46e5;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
 
-/* HERO */
-.hero {
-  height: 100vh; position: relative; display: flex;
-  align-items: center; overflow: hidden;
-}
-.hero-bg {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 70% 50%, #1c1508 0%, var(--bg) 70%);
-}
-.hero-lines {
-  position: absolute; inset: 0; opacity: 0.4;
-  background-image: repeating-linear-gradient(
-    90deg, transparent, transparent 79px,
-    rgba(255,255,255,0.015) 79px, rgba(255,255,255,0.015) 80px
-  );
-}
-.hero-content {
-  position: relative; z-index: 2; padding: 0 48px; max-width: 720px;
-  opacity: 0; transform: translateY(40px);
-  animation: fadeUp 1.2s var(--ease) 2s forwards;
-}
-@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-.hero-tag {
-  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 24px;
-  display: flex; align-items: center; gap: 12px;
-}
-.hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
-.hero-title {
-  font-family: var(--font-display); font-size: clamp(60px, 8vw, 110px);
-  font-weight: 300; line-height: 0.9; color: var(--text);
-  margin-bottom: 28px; letter-spacing: -1px;
-}
-.hero-title em { font-style: italic; color: var(--accent); }
-.hero-desc {
-  font-size: 15px; color: var(--text-muted); line-height: 1.8;
-  max-width: 440px; margin-bottom: 48px; font-weight: 300;
-}
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 16px 36px; background: var(--accent); color: var(--bg);
-  font-family: var(--font-body); font-size: 12px; letter-spacing: 2px;
-  text-transform: uppercase; border: none; cursor: pointer;
-  font-weight: 500; text-decoration: none;
-  transition: all 0.35s var(--ease); position: relative; overflow: hidden;
-}
-.btn-primary::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--accent2); transform: scaleX(0); transform-origin: left;
-  transition: transform 0.35s var(--ease); z-index: 0;
-}
-.btn-primary:hover::before { transform: scaleX(1); }
-.btn-primary span { position: relative; z-index: 1; }
-.btn-primary svg { position: relative; z-index: 1; transition: transform 0.3s var(--ease); }
-.btn-primary:hover svg { transform: translateX(4px); }
+        .now-playing-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 12, 18, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid #2d2f3e;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.5);
+        }
+        .track-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 180px;
+        }
+        .track-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #1e2235, #0f111a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #a78bfa;
+            overflow: hidden;
+        }
+        .track-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .track-details h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .track-details p {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .ctrl-btn:hover {
+            color: #c084fc;
+            transform: scale(1.05);
+        }
+        .play-pause {
+            background: #4f46e5;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .play-pause:hover {
+            background: #6366f1;
+            transform: scale(1.02);
+        }
+        .progress-area {
+            flex: 2;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .time-current, .time-duration {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #2d2f3e;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-filled {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #c084fc, #4f46e5);
+            border-radius: 5px;
+            position: relative;
+        }
 
-.btn-outline {
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 15px 36px; background: transparent; color: var(--text);
-  font-family: var(--font-body); font-size: 12px; letter-spacing: 2px;
-  text-transform: uppercase; border: 1px solid var(--border-hover); cursor: pointer;
-  font-weight: 400; text-decoration: none;
-  transition: all 0.35s var(--ease);
-}
-.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-
-.hero-scroll {
-  position: absolute; bottom: 40px; right: 48px; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  opacity: 0; animation: fadeUp 1s var(--ease) 2.5s forwards;
-}
-.hero-scroll span {
-  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text-dim); writing-mode: vertical-rl;
-}
-.scroll-line {
-  width: 1px; height: 60px; background: linear-gradient(to bottom, var(--accent), transparent);
-  animation: scrollDown 2s ease-in-out infinite;
-}
-@keyframes scrollDown { 0%,100%{transform:scaleY(1);transform-origin:top} 50%{transform:scaleY(0.5);transform-origin:bottom} }
-
-.hero-float {
-  position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-  width: 420px; height: 520px;
-  opacity: 0; animation: fadeUp 1.4s var(--ease) 2.2s forwards;
-}
-.hero-float-inner {
-  width: 100%; height: 100%; background: var(--bg3);
-  border: 1px solid var(--border);
-  position: relative; overflow: hidden;
-}
-.hero-float-img {
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg, #1a1205 0%, #2a1e0a 30%, #1c1508 60%, #0c0c0c 100%);
-  display: flex; align-items: center; justify-content: center;
-}
-.hero-float-img svg { opacity: 0.15; }
-.hero-float-tag {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 28px; background: linear-gradient(to top, rgba(12,12,12,0.98), transparent);
-}
-.hero-float-tag p { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-.hero-float-tag h3 { font-family: var(--font-display); font-size: 22px; color: var(--text); font-weight: 400; }
-.hero-float-tag .price { font-size: 13px; color: var(--accent); margin-top: 6px; }
-
-/* MARQUEE */
-.marquee-wrap {
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  overflow: hidden; padding: 18px 0; background: var(--bg2);
-}
-.marquee-track {
-  display: flex; gap: 0; white-space: nowrap;
-  animation: marquee 25s linear infinite;
-}
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-item {
-  display: inline-flex; align-items: center; gap: 32px; padding: 0 32px;
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text-dim);
-}
-.marquee-dot { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
-
-/* SECTIONS */
-section { padding: 120px 48px; }
-.section-header { margin-bottom: 72px; }
-.section-tag {
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
-}
-.section-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-.section-title {
-  font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px);
-  font-weight: 300; line-height: 1.1; color: var(--text);
-}
-.section-title em { font-style: italic; color: var(--accent); }
-
-/* CATEGORIES */
-.categories-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px;
-}
-.cat-card {
-  position: relative; overflow: hidden; cursor: pointer;
-  height: 480px; background: var(--bg3);
-}
-.cat-card:first-child { grid-row: span 1; }
-.cat-card:last-child { grid-column: span 1; }
-.cat-bg {
-  position: absolute; inset: 0; transition: transform 0.7s var(--ease);
-}
-.cat-bg-1 { background: linear-gradient(160deg, #1a1205, #0c0c0c); }
-.cat-bg-2 { background: linear-gradient(160deg, #081520, #0c0c0c); }
-.cat-bg-3 { background: linear-gradient(160deg, #150820, #0c0c0c); }
-.cat-card:hover .cat-bg { transform: scale(1.05); }
-.cat-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(12,12,12,0.9) 0%, transparent 60%);
-  transition: opacity 0.4s;
-}
-.cat-card:hover .cat-overlay { opacity: 0.7; }
-.cat-icon {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
-  opacity: 0.08; transition: all 0.5s var(--ease);
-}
-.cat-card:hover .cat-icon { opacity: 0.04; transform: translate(-50%, -55%) scale(1.1); }
-.cat-content {
-  position: absolute; bottom: 0; left: 0; right: 0; padding: 36px;
-  transform: translateY(10px); transition: transform 0.4s var(--ease);
-}
-.cat-card:hover .cat-content { transform: translateY(0); }
-.cat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-.cat-name { font-family: var(--font-display); font-size: 32px; font-weight: 300; color: var(--text); margin-bottom: 12px; }
-.cat-count { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
-.cat-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--accent); text-decoration: none;
-  opacity: 0; transform: translateY(8px); transition: all 0.4s var(--ease) 0.05s;
-}
-.cat-link svg { transition: transform 0.3s; }
-.cat-link:hover svg { transform: translateX(4px); }
-.cat-card:hover .cat-link { opacity: 1; transform: translateY(0); }
-
-/* PRODUCTS */
-.products-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-}
-.product-card {
-  background: transparent; cursor: pointer;
-  opacity: 0; transform: translateY(30px);
-  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
-}
-.product-card.visible { opacity: 1; transform: translateY(0); }
-.product-img {
-  position: relative; background: var(--bg3);
-  height: 320px; overflow: hidden; margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-.product-img-bg {
-  width: 100%; height: 100%; transition: transform 0.6s var(--ease);
-  display: flex; align-items: center; justify-content: center;
-}
-.product-card:hover .product-img-bg { transform: scale(1.05); }
-.product-badge {
-  position: absolute; top: 16px; left: 16px;
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  padding: 5px 10px; font-family: var(--font-body);
-}
-.badge-new { background: var(--accent); color: var(--bg); }
-.badge-hot { background: var(--red); color: white; }
-.product-actions {
-  position: absolute; bottom: 16px; right: 16px; left: 16px;
-  display: flex; gap: 8px;
-  transform: translateY(20px); opacity: 0;
-  transition: all 0.35s var(--ease);
-}
-.product-card:hover .product-actions { transform: translateY(0); opacity: 1; }
-.action-btn {
-  flex: 1; padding: 10px; background: rgba(12,12,12,0.9);
-  border: 1px solid var(--border-hover); color: var(--text);
-  font-family: var(--font-body); font-size: 10px; letter-spacing: 1.5px;
-  text-transform: uppercase; cursor: pointer;
-  transition: all 0.25s var(--ease); backdrop-filter: blur(10px);
-}
-.action-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.action-btn.icon-btn { flex: 0 0 40px; padding: 10px; }
-.product-info { padding: 0 4px; }
-.product-brand { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
-.product-name { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
-.product-footer { display: flex; align-items: center; justify-content: space-between; }
-.product-price { font-size: 16px; color: var(--text); font-weight: 300; }
-.product-price-old { font-size: 12px; color: var(--text-dim); text-decoration: line-through; margin-right: 8px; }
-.product-stars { display: flex; gap: 2px; }
-.star { color: var(--accent); font-size: 10px; }
-
-/* BANNER */
-.banner-section {
-  padding: 0; position: relative; overflow: hidden; height: 500px;
-  display: flex; align-items: center;
-}
-.banner-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(105deg, #120d04 0%, #1a1508 40%, #0c0c0c 100%);
-}
-.banner-pattern {
-  position: absolute; inset: 0; opacity: 0.04;
-  background-image: repeating-linear-gradient(45deg, #c9a96e 0px, #c9a96e 1px, transparent 1px, transparent 50px),
-    repeating-linear-gradient(-45deg, #c9a96e 0px, #c9a96e 1px, transparent 1px, transparent 50px);
-}
-.banner-content { position: relative; z-index: 2; padding: 0 48px; }
-.banner-offer {
-  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 20px;
-  display: flex; align-items: center; gap: 12px;
-}
-.banner-offer::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
-.banner-title {
-  font-family: var(--font-display); font-size: clamp(48px, 6vw, 80px);
-  font-weight: 300; color: var(--text); line-height: 1.0; margin-bottom: 12px;
-}
-.banner-title em { font-style: italic; color: var(--accent); }
-.banner-sub { font-size: 15px; color: var(--text-muted); margin-bottom: 40px; font-weight: 300; }
-.banner-btns { display: flex; gap: 16px; }
-
-/* TESTIMONIALS */
-.testimonials-bg { background: var(--bg2); }
-.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-.testimonial {
-  padding: 48px 40px; background: var(--bg3); border: 1px solid var(--border);
-  transition: border-color 0.3s;
-}
-.testimonial:hover { border-color: var(--border-hover); }
-.testimonial-stars { display: flex; gap: 3px; margin-bottom: 24px; }
-.testimonial-text {
-  font-family: var(--font-display); font-size: 20px; font-weight: 300;
-  font-style: italic; color: var(--text); line-height: 1.6; margin-bottom: 28px;
-}
-.testimonial-author { display: flex; align-items: center; gap: 14px; }
-.author-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--bg3));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: var(--bg); font-weight: 500;
-}
-.author-name { font-size: 13px; color: var(--text); margin-bottom: 2px; }
-.author-tag { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; }
-
-/* NEWSLETTER */
-.newsletter { background: var(--bg); text-align: center; }
-.newsletter-inner { max-width: 560px; margin: 0 auto; }
-.newsletter-title {
-  font-family: var(--font-display); font-size: clamp(36px, 4vw, 52px);
-  font-weight: 300; color: var(--text); margin-bottom: 16px;
-}
-.newsletter-title em { font-style: italic; color: var(--accent); }
-.newsletter-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 44px; line-height: 1.7; }
-.newsletter-form { display: flex; gap: 0; border: 1px solid var(--border-hover); }
-.newsletter-input {
-  flex: 1; padding: 16px 24px; background: transparent;
-  border: none; color: var(--text); font-family: var(--font-body); font-size: 13px;
-  outline: none;
-}
-.newsletter-input::placeholder { color: var(--text-dim); }
-.newsletter-btn {
-  padding: 16px 32px; background: var(--accent); border: none;
-  color: var(--bg); font-family: var(--font-body); font-size: 11px;
-  letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
-  font-weight: 500; transition: background 0.3s;
-}
-.newsletter-btn:hover { background: var(--accent2); }
-
-/* FOOTER */
-footer {
-  background: var(--bg2); border-top: 1px solid var(--border);
-  padding: 80px 48px 40px;
-}
-.footer-top {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 60px; margin-bottom: 60px;
-}
-.footer-brand-name { font-family: var(--font-display); font-size: 32px; letter-spacing: 6px; color: var(--text); font-weight: 300; margin-bottom: 16px; }
-.footer-brand-desc { font-size: 13px; color: var(--text-dim); line-height: 1.8; max-width: 280px; margin-bottom: 28px; }
-.footer-social { display: flex; gap: 12px; }
-.social-btn {
-  width: 36px; height: 36px; border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted); font-size: 14px; cursor: pointer;
-  transition: all 0.3s; text-decoration: none;
-}
-.social-btn:hover { border-color: var(--accent); color: var(--accent); }
-.footer-col h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text); margin-bottom: 24px; }
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-.footer-col ul a { font-size: 13px; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
-.footer-col ul a:hover { color: var(--text); }
-.footer-bottom {
-  border-top: 1px solid var(--border); padding-top: 32px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.footer-copy { font-size: 12px; color: var(--text-dim); }
-.footer-payments { display: flex; gap: 10px; }
-.payment-badge {
-  padding: 4px 10px; border: 1px solid var(--border);
-  font-size: 10px; letter-spacing: 1px; color: var(--text-dim);
-}
-
-/* Cart Sidebar */
-#cart-sidebar {
-  position: fixed; top: 0; right: -420px; width: 420px; height: 100vh;
-  background: var(--bg2); border-left: 1px solid var(--border);
-  z-index: 500; transition: right 0.45s var(--ease);
-  display: flex; flex-direction: column; overflow: hidden;
-}
-#cart-sidebar.open { right: 0; }
-#cart-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-  z-index: 499; opacity: 0; visibility: hidden; transition: all 0.4s;
-  backdrop-filter: blur(4px);
-}
-#cart-overlay.open { opacity: 1; visibility: visible; }
-.cart-header {
-  padding: 28px 32px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-}
-.cart-title { font-family: var(--font-display); font-size: 24px; font-weight: 400; }
-.cart-close {
-  background: none; border: none; color: var(--text-muted); cursor: pointer;
-  font-size: 22px; transition: color 0.3s; line-height: 1;
-}
-.cart-close:hover { color: var(--text); }
-.cart-items { flex: 1; overflow-y: auto; padding: 24px 32px; }
-.cart-empty {
-  height: 100%; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px;
-}
-.cart-empty-icon { font-size: 48px; opacity: 0.2; }
-.cart-empty p { font-size: 13px; color: var(--text-muted); }
-.cart-item {
-  display: flex; gap: 16px; padding: 20px 0;
-  border-bottom: 1px solid var(--border);
-  animation: slideIn 0.35s var(--ease);
-}
-@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-.cart-item-img {
-  width: 80px; height: 100px; background: var(--bg3);
-  border: 1px solid var(--border); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.cart-item-info { flex: 1; }
-.cart-item-brand { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
-.cart-item-name { font-family: var(--font-display); font-size: 17px; color: var(--text); margin-bottom: 10px; }
-.cart-item-price { font-size: 14px; color: var(--accent); }
-.cart-item-remove {
-  background: none; border: none; color: var(--text-dim); cursor: pointer;
-  font-size: 16px; transition: color 0.3s; padding: 0; align-self: flex-start; margin-top: 2px;
-}
-.cart-item-remove:hover { color: var(--red); }
-.cart-footer { padding: 24px 32px; border-top: 1px solid var(--border); flex-shrink: 0; }
-.cart-subtotal { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.cart-subtotal span:first-child { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
-.cart-subtotal span:last-child { font-family: var(--font-display); font-size: 22px; color: var(--text); }
-.checkout-btn {
-  width: 100%; padding: 18px; background: var(--accent);
-  border: none; color: var(--bg); font-family: var(--font-body);
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  cursor: pointer; font-weight: 500; transition: background 0.3s;
-}
-.checkout-btn:hover { background: var(--accent2); }
-
-/* Toast */
-#toast {
-  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-  background: var(--bg3); border: 1px solid var(--accent);
-  color: var(--text); padding: 14px 28px;
-  font-size: 12px; letter-spacing: 1px; z-index: 9999;
-  transition: transform 0.4s var(--ease-spring), opacity 0.4s;
-  opacity: 0; white-space: nowrap;
-  display: flex; align-items: center; gap: 10px;
-}
-#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-#toast::before { content: '✓'; color: var(--accent); font-size: 14px; }
-
-/* Reveal animations */
-.reveal {
-  opacity: 0; transform: translateY(40px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* Product image placeholders with unique looks */
-.pimg-1 { background: linear-gradient(135deg, #1a1205 0%, #2a1d0a 100%); }
-.pimg-2 { background: linear-gradient(135deg, #0a1520 0%, #0f2030 100%); }
-.pimg-3 { background: linear-gradient(135deg, #150a20 0%, #200f30 100%); }
-.pimg-4 { background: linear-gradient(135deg, #0a1a0a 0%, #0f2510 100%); }
-.pimg-5 { background: linear-gradient(135deg, #201505 0%, #302010 100%); }
-.pimg-6 { background: linear-gradient(135deg, #0f1a25 0%, #152030 100%); }
-.pimg-7 { background: linear-gradient(135deg, #1a0a15 0%, #280f20 100%); }
-.pimg-8 { background: linear-gradient(135deg, #151515 0%, #222222 100%); }
-
-@media (max-width: 900px) {
-  nav { padding: 0 24px; }
-  .nav-links { display: none; }
-  .hero-content { padding: 0 24px; }
-  .hero-float { display: none; }
-  section { padding: 80px 24px; }
-  .products-grid { grid-template-columns: repeat(2, 1fr); }
-  .categories-grid { grid-template-columns: 1fr; }
-  .testimonials-grid { grid-template-columns: 1fr; }
-  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
-  .newsletter-form { flex-direction: column; }
-  .banner-btns { flex-direction: column; }
-  footer { padding: 60px 24px 32px; }
-}
-</style>
+        @media (max-width: 700px) {
+            .app {
+                padding: 15px 20px 100px 20px;
+            }
+            .now-playing-bar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+            }
+            .progress-area {
+                width: 100%;
+            }
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.75rem;
+            color: #4b5563;
+        }
+    </style>
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<div class="app">
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-headphones"></i>
+            <h1>Melodify</h1>
+        </div>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Sanatçı, şarkı veya albüm ara...">
+        </div>
+        <div class="user-icon">
+            <i class="fas fa-user-astronaut"></i>
+        </div>
+    </div>
 
-<div id="loader">
-  <div class="loader-logo">NŌVA</div>
-  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+    <div class="categories" id="categoriesContainer"></div>
+
+    <div class="section-title">
+        <i class="fas fa-chart-line"></i> 
+        <span>Günün Hit Parçaları</span>
+    </div>
+    <div class="grid-cards" id="popularGrid"></div>
+
+    <div class="section-title">
+        <i class="fas fa-microphone-alt"></i>
+        <span>Keşfet | Önerilenler</span>
+    </div>
+    <div class="grid-cards" id="discoverGrid"></div>
+    <footer>🎵 Melodify · Anlık müzik akışı · Gerçek oynatıcı deneyimi</footer>
 </div>
 
-<div id="toast"></div>
-
-<!-- CART SIDEBAR -->
-<div id="cart-overlay" onclick="toggleCart()"></div>
-<div id="cart-sidebar">
-  <div class="cart-header">
-    <h2 class="cart-title">Sepetim</h2>
-    <button class="cart-close" onclick="toggleCart()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">
-      <div class="cart-empty-icon">◇</div>
-      <p>Sepetiniz boş</p>
+<div class="now-playing-bar" id="nowPlayingBar">
+    <div class="track-info">
+        <div class="track-icon" id="trackIcon">
+            <i class="fas fa-music"></i>
+        </div>
+        <div class="track-details">
+            <h4 id="currentSongTitle">Şarkı seçilmedi</h4>
+            <p id="currentArtist">Melodify'da keşfet</p>
+        </div>
     </div>
-  </div>
-  <div class="cart-footer">
-    <div class="cart-subtotal">
-      <span>Toplam</span>
-      <span id="cartTotal">₺0</span>
+    <div class="player-controls">
+        <button class="ctrl-btn" id="prevBtn"><i class="fas fa-backward-step"></i></button>
+        <button class="ctrl-btn play-pause" id="playPauseBtn"><i class="fas fa-play"></i></button>
+        <button class="ctrl-btn" id="nextBtn"><i class="fas fa-forward-step"></i></button>
     </div>
-    <button class="checkout-btn" onclick="showToast('Ödeme sayfasına yönlendiriliyorsunuz...')">Ödemeye Geç →</button>
-  </div>
+    <div class="progress-area">
+        <span class="time-current" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-filled" id="progressFilled"></div>
+        </div>
+        <span class="time-duration" id="durationTime">0:00</span>
+    </div>
 </div>
-
-<!-- NAV -->
-<nav id="navbar">
-  <a href="#" class="nav-logo">NŌVA</a>
-  <ul class="nav-links">
-    <li><a href="#categories">Koleksiyonlar</a></li>
-    <li><a href="#products">Ürünler</a></li>
-    <li><a href="#about">Hakkımızda</a></li>
-    <li><a href="#contact">İletişim</a></li>
-  </ul>
-  <div class="nav-actions">
-    <button class="nav-icon" onclick="showToast('Arama açılıyor...')">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-    </button>
-    <button class="nav-icon" onclick="showToast('Favorilerinize bakın...')">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </button>
-    <button class="nav-icon" onclick="toggleCart()" style="position:relative">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-lines"></div>
-  <div class="hero-content">
-    <div class="hero-tag">Yeni Sezon 2025</div>
-    <h1 class="hero-title">Zamanı<br>Aşan <em>Stil</em></h1>
-    <p class="hero-desc">Her parça, kusursuz zanaatkarlık ve seçilmiş malzemelerle hayata geçirilir. Kendinizi ifade edin.</p>
-    <div style="display:flex;gap:16px;flex-wrap:wrap">
-      <a href="#products" class="btn-primary">
-        <span>Keşfet</span>
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-      <a href="#categories" class="btn-outline">Koleksiyonlar</a>
-    </div>
-  </div>
-  <div class="hero-float">
-    <div class="hero-float-inner">
-      <div class="hero-float-img">
-        <svg width="180" height="180" viewBox="0 0 180 180" fill="none">
-          <rect x="40" y="20" width="100" height="140" rx="2" stroke="#c9a96e" stroke-width="0.5"/>
-          <rect x="55" y="35" width="70" height="90" rx="1" stroke="#c9a96e" stroke-width="0.3"/>
-          <line x1="55" y1="60" x2="125" y2="60" stroke="#c9a96e" stroke-width="0.3"/>
-          <line x1="55" y1="75" x2="125" y2="75" stroke="#c9a96e" stroke-width="0.3"/>
-          <circle cx="90" cy="110" r="12" stroke="#c9a96e" stroke-width="0.5"/>
-          <line x1="60" y1="145" x2="120" y2="145" stroke="#c9a96e" stroke-width="0.5"/>
-        </svg>
-      </div>
-      <div class="hero-float-tag">
-        <p>Öne Çıkan</p>
-        <h3>Atelier Ceket</h3>
-        <div class="price">₺4.890</div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="marqueeTrack"></div>
-</div>
-
-<!-- CATEGORIES -->
-<section id="categories">
-  <div class="section-header reveal">
-    <div class="section-tag">Koleksiyonlar</div>
-    <h2 class="section-title">Tarzını <em>Keşfet</em></h2>
-  </div>
-  <div class="categories-grid reveal">
-    <div class="cat-card" onclick="filterProducts('Giyim')">
-      <div class="cat-bg cat-bg-1"></div>
-      <div class="cat-overlay"></div>
-      <div class="cat-icon">
-        <svg width="160" height="160" viewBox="0 0 160 160" fill="none"><path d="M40 30 L60 20 L80 40 L100 20 L120 30 L130 70 L110 70 L110 140 L50 140 L50 70 L30 70 Z" stroke="#c9a96e" stroke-width="0.5" fill="none"/></svg>
-      </div>
-      <div class="cat-content">
-        <div class="cat-label">Koleksiyon</div>
-        <div class="cat-name">Giyim</div>
-        <div class="cat-count">42 ürün</div>
-        <a class="cat-link" href="#products">Tümünü Gör <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-    </div>
-    <div class="cat-card" onclick="filterProducts('Aksesuar')">
-      <div class="cat-bg cat-bg-2"></div>
-      <div class="cat-overlay"></div>
-      <div class="cat-icon">
-        <svg width="160" height="160" viewBox="0 0 160 160" fill="none"><circle cx="80" cy="80" r="50" stroke="#c9a96e" stroke-width="0.5"/><circle cx="80" cy="80" r="30" stroke="#c9a96e" stroke-width="0.3"/><circle cx="80" cy="80" r="4" fill="#c9a96e" opacity="0.3"/></svg>
-      </div>
-      <div class="cat-content">
-        <div class="cat-label">Koleksiyon</div>
-        <div class="cat-name">Aksesuar</div>
-        <div class="cat-count">28 ürün</div>
-        <a class="cat-link" href="#products">Tümünü Gör <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-    </div>
-    <div class="cat-card" onclick="filterProducts('Ayakkabı')">
-      <div class="cat-bg cat-bg-3"></div>
-      <div class="cat-overlay"></div>
-      <div class="cat-icon">
-        <svg width="160" height="160" viewBox="0 0 160 160" fill="none"><path d="M20 110 Q40 80 80 85 Q120 90 145 100 L140 125 Q100 130 60 125 Q30 120 20 110 Z" stroke="#c9a96e" stroke-width="0.5" fill="none"/></svg>
-      </div>
-      <div class="cat-content">
-        <div class="cat-label">Koleksiyon</div>
-        <div class="cat-name">Ayakkabı</div>
-        <div class="cat-count">19 ürün</div>
-        <a class="cat-link" href="#products">Tümünü Gör <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRODUCTS -->
-<section id="products" style="background:var(--bg2)">
-  <div class="section-header reveal" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px">
-    <div>
-      <div class="section-tag">Yeni Gelenler</div>
-      <h2 class="section-title">Öne Çıkan <em>Ürünler</em></h2>
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0" id="filterBtns">
-      <button class="filter-btn active" onclick="filterProducts('Tümü',this)" data-cat="Tümü">Tümü</button>
-      <button class="filter-btn" onclick="filterProducts('Giyim',this)" data-cat="Giyim">Giyim</button>
-      <button class="filter-btn" onclick="filterProducts('Aksesuar',this)" data-cat="Aksesuar">Aksesuar</button>
-      <button class="filter-btn" onclick="filterProducts('Ayakkabı',this)" data-cat="Ayakkabı">Ayakkabı</button>
-    </div>
-  </div>
-  <div class="products-grid" id="productsGrid"></div>
-</section>
-
-<!-- BANNER -->
-<div class="banner-section">
-  <div class="banner-bg"></div>
-  <div class="banner-pattern"></div>
-  <div class="banner-content reveal">
-    <div class="banner-offer">Sınırlı Süre</div>
-    <h2 class="banner-title">%30 <em>İndirim</em><br>Seçili Ürünlerde</h2>
-    <p class="banner-sub">Bu fırsatı kaçırmayın. Sadece 48 saat geçerli.</p>
-    <div class="banner-btns">
-      <a href="#products" class="btn-primary"><span>Hemen Al</span><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      <a href="#" class="btn-outline">Detayları Gör</a>
-    </div>
-  </div>
-</div>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials-bg" id="about">
-  <div class="section-header reveal">
-    <div class="section-tag">Müşteri Yorumları</div>
-    <h2 class="section-title">Onlar Ne <em>Diyor?</em></h2>
-  </div>
-  <div class="testimonials-grid reveal">
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text">"Her detayda mükemmellik hissediyorsunuz. Bu kaliteyi başka hiçbir yerde bulamadım."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">AY</div>
-        <div><div class="author-name">Ayşe Yılmaz</div><div class="author-tag">Sadık Müşteri</div></div>
-      </div>
-    </div>
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text">"Paket açılışından ürünün kalitesine kadar her şey inanılmaz. Kesinlikle tekrar alacağım."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">MK</div>
-        <div><div class="author-name">Mert Kaya</div><div class="author-tag">Doğrulanmış Alıcı</div></div>
-      </div>
-    </div>
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text">"Tasarım ve kalite mükemmel uyum içinde. NŌVA benim için vazgeçilmez bir marka oldu."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">ZD</div>
-        <div><div class="author-name">Zeynep Demir</div><div class="author-tag">Premium Üye</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- NEWSLETTER -->
-<section class="newsletter" id="contact">
-  <div class="newsletter-inner reveal">
-    <div class="section-tag" style="justify-content:center;margin-bottom:16px">Özel Teklifler</div>
-    <h2 class="newsletter-title">Hiçbir <em>Fırsatı</em><br>Kaçırmayın</h2>
-    <p class="newsletter-sub">Yeni koleksiyonlar, özel indirimler ve içerik için bültenimize abone olun.</p>
-    <div class="newsletter-form">
-      <input class="newsletter-input" type="email" placeholder="E-posta adresiniz" id="emailInput">
-      <button class="newsletter-btn" onclick="handleNewsletter()">Abone Ol</button>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-brand-name">NŌVA</div>
-      <p class="footer-brand-desc">Zamanı aşan tasarım ve kusursuz zanaatkarlıkla üretilen premium koleksiyonlar.</p>
-      <div class="footer-social">
-        <a class="social-btn" href="#" onclick="showToast('Instagram açılıyor...');return false">IG</a>
-        <a class="social-btn" href="#" onclick="showToast('Twitter açılıyor...');return false">TW</a>
-        <a class="social-btn" href="#" onclick="showToast('Pinterest açılıyor...');return false">PT</a>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4>Alışveriş</h4>
-      <ul>
-        <li><a href="#">Yeni Gelenler</a></li>
-        <li><a href="#">Kadın</a></li>
-        <li><a href="#">Erkek</a></li>
-        <li><a href="#">Aksesuar</a></li>
-        <li><a href="#">İndirim</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Yardım</h4>
-      <ul>
-        <li><a href="#">SSS</a></li>
-        <li><a href="#">Kargo</a></li>
-        <li><a href="#">İade</a></li>
-        <li><a href="#">Beden Rehberi</a></li>
-        <li><a href="#">İletişim</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Şirket</h4>
-      <ul>
-        <li><a href="#">Hakkımızda</a></li>
-        <li><a href="#">Kariyer</a></li>
-        <li><a href="#">Basın</a></li>
-        <li><a href="#">Sürdürülebilirlik</a></li>
-        <li><a href="#">Gizlilik</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p class="footer-copy">© 2025 NŌVA. Tüm hakları saklıdır.</p>
-    <div class="footer-payments">
-      <span class="payment-badge">VISA</span>
-      <span class="payment-badge">MC</span>
-      <span class="payment-badge">AMEX</span>
-      <span class="payment-badge">PAYTR</span>
-    </div>
-  </div>
-</footer>
-
-<style>
-.filter-btn {
-  padding: 8px 18px; background: transparent; border: 1px solid var(--border);
-  color: var(--text-muted); font-family: var(--font-body); font-size: 11px;
-  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
-  transition: all 0.25s var(--ease);
-}
-.filter-btn:hover { border-color: var(--border-hover); color: var(--text); }
-.filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-</style>
 
 <script>
-// Cursor
-const cur = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
-function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); }
-animRing();
+    // ÖZEL MÜZİK: Ridvani - Patlaticam (senin verdiğin link ve görsel)
+    const SPECIAL_SONG = {
+        id: 999,
+        title: "Patlaticam",
+        artist: "Ridvani",
+        category: "pop",
+        src: "https://files.catbox.moe/bkxltz.mp3",
+        coverIcon: "fa-bomb",
+        coverImage: "ridvani_patlaticam.png",
+        duration: 198,
+        isSpecial: true
+    };
 
-// Loader
-setTimeout(() => document.getElementById('loader').classList.add('hidden'), 2200);
+    // MÜZİK VERİTABANI (özel şarkı başta olacak şekilde)
+    const SONGS_DB = [
+        SPECIAL_SONG,
+        { id: 1, title: "Blinding Lights", artist: "The Weeknd", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", coverIcon: "fa-sun", duration: 210 },
+        { id: 2, title: "Rolling in the Deep", artist: "Adele", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", coverIcon: "fa-water", duration: 228 },
+        { id: 3, title: "Lose Control", artist: "Teddy Swims", category: "soul", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", coverIcon: "fa-heart", duration: 205 },
+        { id: 4, title: "Houdini", artist: "Dua Lipa", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", coverIcon: "fa-magic", duration: 198 },
+        { id: 5, title: "Starboy", artist: "The Weeknd", category: "rnb", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", coverIcon: "fa-rocket", duration: 230 },
+        { id: 6, title: "Levitating", artist: "Dua Lipa", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", coverIcon: "fa-star", duration: 203 },
+        { id: 7, title: "Flowers", artist: "Miley Cyrus", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", coverIcon: "fa-seedling", duration: 200 },
+        { id: 8, title: "Creepin'", artist: "Metro Boomin", category: "rnb", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", coverIcon: "fa-ghost", duration: 215 },
+        { id: 9, title: "Uptown Funk", artist: "Bruno Mars", category: "funk", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", coverIcon: "fa-drumstick-bite", duration: 270 },
+        { id: 10, title: "Rockstar", artist: "Post Malone", category: "hiphop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", coverIcon: "fa-guitar", duration: 218 },
+        { id: 11, title: "Die For You", artist: "The Weeknd", category: "rnb", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", coverIcon: "fa-moon", duration: 248 },
+        { id: 12, title: "Anti-Hero", artist: "Taylor Swift", category: "pop", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", coverIcon: "fa-crown", duration: 198 }
+    ];
 
-// Nav scroll
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
-});
+    let currentPlaylist = [...SONGS_DB];
+    let currentIndex = 0;
+    let audio = new Audio();
+    let isPlaying = false;
 
-// Marquee
-const items = ['Ücretsiz Kargo 500₺ Üzeri','Premium Kalite','Yeni Koleksiyon 2025','Güvenli Ödeme','30 Gün İade'];
-const track = document.getElementById('marqueeTrack');
-[...items,...items,...items,...items].forEach(t => {
-  track.innerHTML += `<span class="marquee-item">${t}<span class="marquee-dot"></span></span>`;
-});
+    const popularGrid = document.getElementById('popularGrid');
+    const discoverGrid = document.getElementById('discoverGrid');
+    const searchInput = document.getElementById('searchInput');
+    const categoriesDiv = document.getElementById('categoriesContainer');
+    const currentSongTitleSpan = document.getElementById('currentSongTitle');
+    const currentArtistSpan = document.getElementById('currentArtist');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBarDiv = document.getElementById('progressBar');
+    const progressFilled = document.getElementById('progressFilled');
+    const currentTimeSpan = document.getElementById('currentTime');
+    const durationTimeSpan = document.getElementById('durationTime');
+    const trackIconDiv = document.getElementById('trackIcon');
 
-// Products data
-const products = [
-  {id:1,name:'Merino Yün Palto',brand:'NŌVA Atelier',price:8490,oldPrice:null,cat:'Giyim',badge:'new',img:'pimg-1',stars:5},
-  {id:2,name:'Saten Bluz',brand:'NŌVA Femme',price:2190,oldPrice:2990,cat:'Giyim',badge:'hot',img:'pimg-2',stars:4},
-  {id:3,name:'Titanyum Saat',brand:'NŌVA Time',price:12900,oldPrice:null,cat:'Aksesuar',badge:'new',img:'pimg-3',stars:5},
-  {id:4,name:'Deri Oxford',brand:'NŌVA Shoes',price:5490,oldPrice:null,cat:'Ayakkabı',badge:null,img:'pimg-4',stars:5},
-  {id:5,name:'Kaşmir Kazak',brand:'NŌVA Atelier',price:3890,oldPrice:4990,cat:'Giyim',badge:'hot',img:'pimg-5',stars:4},
-  {id:6,name:'İpek Kravat',brand:'NŌVA Man',price:1290,oldPrice:null,cat:'Aksesuar',badge:null,img:'pimg-6',stars:5},
-  {id:7,name:'Süet Chelsea Bot',brand:'NŌVA Shoes',price:6790,oldPrice:null,cat:'Ayakkabı',badge:'new',img:'pimg-7',stars:4},
-  {id:8,name:'Trençkot',brand:'NŌVA Atelier',price:11490,oldPrice:13990,cat:'Giyim',badge:'hot',img:'pimg-8',stars:5},
-];
+    const categoriesList = ["Tümü", "pop", "soul", "rnb", "funk", "hiphop"];
+    let activeCategory = "Tümü";
 
-let cart = [];
-let activeFilter = 'Tümü';
+    function renderCategories() {
+        categoriesDiv.innerHTML = '';
+        categoriesList.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = `cat-btn ${activeCategory === cat ? 'active' : ''}`;
+            btn.textContent = cat === "Tümü" ? "🔥 Tümü" : cat.charAt(0).toUpperCase() + cat.slice(1);
+            btn.addEventListener('click', () => {
+                activeCategory = cat;
+                renderCategories();
+                filterAndRenderSongs();
+            });
+            categoriesDiv.appendChild(btn);
+        });
+    }
 
-const svgIcons = [
-  `<svg width="60" height="80" viewBox="0 0 60 80" fill="none"><path d="M15 10 L20 5 L30 15 L40 5 L45 10 L50 30 L42 30 L42 75 L18 75 L18 30 L10 30 Z" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/></svg>`,
-  `<svg width="70" height="70" viewBox="0 0 70 70" fill="none"><ellipse cx="35" cy="35" rx="25" ry="30" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/><line x1="10" y1="35" x2="60" y2="35" stroke="#c9a96e" stroke-width="0.3" opacity="0.3"/></svg>`,
-  `<svg width="70" height="70" viewBox="0 0 70 70" fill="none"><circle cx="35" cy="35" r="28" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/><circle cx="35" cy="35" r="14" stroke="#c9a96e" stroke-width="0.3" fill="none" opacity="0.3"/><circle cx="35" cy="35" r="3" fill="#c9a96e" opacity="0.3"/></svg>`,
-  `<svg width="80" height="50" viewBox="0 0 80 50" fill="none"><path d="M5 40 Q20 20 40 25 Q60 30 75 22 L72 42 Q50 48 28 44 Q12 42 5 40 Z" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/></svg>`,
-  `<svg width="65" height="75" viewBox="0 0 65 75" fill="none"><rect x="10" y="8" width="45" height="60" rx="2" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/><line x1="20" y1="25" x2="45" y2="25" stroke="#c9a96e" stroke-width="0.3" opacity="0.3"/><line x1="20" y1="35" x2="45" y2="35" stroke="#c9a96e" stroke-width="0.3" opacity="0.3"/></svg>`,
-  `<svg width="60" height="40" viewBox="0 0 60 40" fill="none"><path d="M5 30 L15 8 L30 12 L45 8 L55 30 L30 36 Z" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/></svg>`,
-  `<svg width="65" height="75" viewBox="0 0 65 75" fill="none"><path d="M15 8 L50 8 L55 30 L48 30 L48 70 L17 70 L17 30 L10 30 Z" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/><line x1="25" y1="45" x2="40" y2="45" stroke="#c9a96e" stroke-width="0.3" opacity="0.3"/></svg>`,
-  `<svg width="70" height="70" viewBox="0 0 70 70" fill="none"><path d="M10 20 L35 10 L60 20 L60 55 L35 65 L10 55 Z" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/></svg>`,
-];
+    function filterSongs() {
+        let filtered = [...SONGS_DB];
+        if (activeCategory !== "Tümü") {
+            filtered = filtered.filter(song => song.category === activeCategory);
+        }
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        if (searchTerm) {
+            filtered = filtered.filter(song => song.title.toLowerCase().includes(searchTerm) || song.artist.toLowerCase().includes(searchTerm));
+        }
+        return filtered;
+    }
 
-function renderProducts(filter) {
-  const grid = document.getElementById('productsGrid');
-  const filtered = filter === 'Tümü' ? products : products.filter(p => p.cat === filter);
-  grid.innerHTML = '';
-  filtered.forEach((p, i) => {
-    const stars = '★'.repeat(p.stars) + '☆'.repeat(5-p.stars);
-    const badge = p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge === 'new' ? 'Yeni' : 'Çok Satan'}</div>` : '';
-    const oldPrice = p.oldPrice ? `<span class="product-price-old">₺${p.oldPrice.toLocaleString('tr-TR')}</span>` : '';
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.style.transitionDelay = (i * 0.07) + 's';
-    card.innerHTML = `
-      <div class="product-img">
-        <div class="product-img-bg ${p.img}" style="display:flex;align-items:center;justify-content:center;">
-          ${svgIcons[p.id-1] || svgIcons[0]}
-        </div>
-        ${badge}
-        <div class="product-actions">
-          <button class="action-btn" onclick="addToCart(${p.id})">Sepete Ekle</button>
-          <button class="action-btn icon-btn" onclick="showToast('${p.name} favorilere eklendi')">♡</button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-brand">${p.brand}</div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-footer">
-          <div>${oldPrice}<span class="product-price">₺${p.price.toLocaleString('tr-TR')}</span></div>
-          <div class="product-stars">${stars.split('').map(s=>`<span class="star">${s}</span>`).join('')}</div>
-        </div>
-      </div>`;
-    grid.appendChild(card);
-    setTimeout(() => card.classList.add('visible'), 50 + i * 70);
-  });
-}
+    function getCardImageHtml(song) {
+        if (song.isSpecial && song.coverImage) {
+            return `<img src="${song.coverImage}" alt="${song.title}" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas ${song.coverIcon}\' style=\'font-size:3rem;\'></i>';">`;
+        }
+        return `<i class="fas ${song.coverIcon}" style="font-size:3rem;"></i>`;
+    }
 
-function filterProducts(cat, btn) {
-  activeFilter = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderProducts(cat);
-  if (cat !== 'Tümü' && !btn) document.getElementById('products').scrollIntoView({behavior:'smooth'});
-}
+    function renderGrid(container, songsArray) {
+        if(!container) return;
+        if(songsArray.length === 0) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px;">🎵 Şarkı bulunamadı 🤷‍♂️</div>`;
+            return;
+        }
+        container.innerHTML = songsArray.map(song => `
+            <div class="music-card" data-id="${song.id}">
+                <div class="card-img" style="position:relative;">
+                    ${getCardImageHtml(song)}
+                    ${song.isSpecial ? '<div class="featured-badge"><i class="fas fa-crown"></i> Özel</div>' : ''}
+                </div>
+                <h4>${escapeHtml(song.title)}</h4>
+                <p>${escapeHtml(song.artist)}</p>
+                <div class="play-hint"><i class="fas fa-play-circle"></i> oynat</div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.music-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const id = parseInt(card.getAttribute('data-id'));
+                const song = SONGS_DB.find(s => s.id === id);
+                if(song) {
+                    const currentFiltered = filterSongs();
+                    const newIndex = currentFiltered.findIndex(s => s.id === id);
+                    if(newIndex !== -1) {
+                        setPlaylistAndPlay(currentFiltered, newIndex, true);
+                    }
+                }
+            });
+        });
+    }
 
-function addToCart(id) {
-  const p = products.find(x => x.id === id);
-  const existing = cart.find(x => x.id === id);
-  if (existing) { existing.qty++; } else { cart.push({...p, qty:1}); }
-  updateCart();
-  showToast(p.name + ' sepete eklendi');
-}
+    function updateNowPlayingIcon(song) {
+        if(!trackIconDiv) return;
+        if(song && song.isSpecial && song.coverImage) {
+            trackIconDiv.innerHTML = `<img src="${song.coverImage}" alt="cover" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
+        } else {
+            const iconClass = (song && song.coverIcon) ? song.coverIcon : "fa-music";
+            trackIconDiv.innerHTML = `<i class="fas ${iconClass}" style="font-size:1.8rem;"></i>`;
+        }
+    }
 
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
-  updateCart();
-}
+    function filterAndRenderSongs() {
+        const filtered = filterSongs();
+        const popularOnes = filtered.slice(0, 6);
+        const discoverOnes = filtered.length > 6 ? filtered.slice(6, 12) : filtered.slice(0, filtered.length);
+        
+        renderGrid(popularGrid, popularOnes);
+        renderGrid(discoverGrid, discoverOnes);
+        
+        if (!filtered.some(s => s.id === currentPlaylist[currentIndex]?.id)) {
+            if(filtered.length > 0) setPlaylistAndPlay(filtered, 0, true);
+            else resetPlayer();
+        } else {
+            currentPlaylist = [...filtered];
+            const stillExists = currentPlaylist.find(s => s.id === currentPlaylist[currentIndex]?.id);
+            if(!stillExists && currentPlaylist.length) setPlaylistAndPlay(currentPlaylist, 0, true);
+        }
+    }
 
-function updateCart() {
-  const count = cart.reduce((a, b) => a + b.qty, 0);
-  const total = cart.reduce((a, b) => a + b.price * b.qty, 0);
-  const countEl = document.getElementById('cartCount');
-  countEl.textContent = count;
-  countEl.classList.toggle('visible', count > 0);
-  document.getElementById('cartTotal').textContent = '₺' + total.toLocaleString('tr-TR');
-  const itemsEl = document.getElementById('cartItems');
-  if (cart.length === 0) {
-    itemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">◇</div><p>Sepetiniz boş</p></div>`;
-    return;
-  }
-  itemsEl.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="cart-item-img"><svg width="30" height="40" viewBox="0 0 30 40" fill="none"><rect x="4" y="2" width="22" height="36" rx="1" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/></svg></div>
-      <div class="cart-item-info">
-        <div class="cart-item-brand">${item.brand}</div>
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">₺${item.price.toLocaleString('tr-TR')} ${item.qty > 1 ? '× '+item.qty : ''}</div>
-      </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
-    </div>`).join('');
-}
+    function setPlaylistAndPlay(playlist, idx, autoPlay = true) {
+        if(!playlist.length) return;
+        currentPlaylist = [...playlist];
+        currentIndex = idx % currentPlaylist.length;
+        loadCurrentSong();
+        if(autoPlay) {
+            audio.play().then(() => {
+                isPlaying = true;
+                updatePlayPauseIcon();
+            }).catch(e => console.log("play error", e));
+        } else {
+            isPlaying = false;
+            updatePlayPauseIcon();
+        }
+    }
 
-function toggleCart() {
-  document.getElementById('cart-sidebar').classList.toggle('open');
-  document.getElementById('cart-overlay').classList.toggle('open');
-}
+    function loadCurrentSong() {
+        if(!currentPlaylist.length) return;
+        const song = currentPlaylist[currentIndex];
+        if(!song) return;
+        
+        if (audio.src !== song.src) {
+            audio.src = song.src;
+            audio.load();
+        }
+        
+        currentSongTitleSpan.textContent = song.title;
+        currentArtistSpan.textContent = song.artist;
+        updateNowPlayingIcon(song);
+        
+        progressFilled.style.width = "0%";
+        currentTimeSpan.textContent = "0:00";
+        if(song.duration) {
+            const mins = Math.floor(song.duration / 60);
+            const secs = song.duration % 60;
+            durationTimeSpan.textContent = `${mins}:${secs < 10 ? '0'+secs : secs}`;
+        } else {
+            durationTimeSpan.textContent = "0:00";
+        }
+        updatePlayPauseIcon();
+    }
 
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = '';
-  t.innerHTML = `<span style="color:var(--accent);margin-right:8px">✓</span>${msg}`;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-}
+    function updatePlayPauseIcon() {
+        const icon = playPauseBtn.querySelector('i');
+        if(isPlaying) {
+            icon.className = "fas fa-pause";
+        } else {
+            icon.className = "fas fa-play";
+        }
+    }
 
-function handleNewsletter() {
-  const v = document.getElementById('emailInput').value;
-  if (!v || !v.includes('@')) { showToast('Lütfen geçerli bir e-posta girin'); return; }
-  showToast('Başarıyla abone oldunuz!');
-  document.getElementById('emailInput').value = '';
-}
+    function resetPlayer() {
+        audio.pause();
+        isPlaying = false;
+        currentSongTitleSpan.textContent = "Şarkı seçilmedi";
+        currentArtistSpan.textContent = "Liste boş";
+        trackIconDiv.innerHTML = '<i class="fas fa-music" style="font-size:1.8rem;"></i>';
+        updatePlayPauseIcon();
+        progressFilled.style.width = "0%";
+        currentTimeSpan.textContent = "0:00";
+        durationTimeSpan.textContent = "0:00";
+    }
 
-// Reveal on scroll
-const revealEls = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-}, { threshold: 0.1 });
-revealEls.forEach(el => obs.observe(el));
+    function formatTime(seconds) {
+        if(isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0'+secs : secs}`;
+    }
 
-// Init
-renderProducts('Tümü');
+    function updateProgress() {
+        if(!audio.duration || isNaN(audio.duration)) return;
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressFilled.style.width = `${percent}%`;
+        currentTimeSpan.textContent = formatTime(audio.currentTime);
+        if(audio.duration && !isNaN(audio.duration)) {
+            durationTimeSpan.textContent = formatTime(audio.duration);
+        }
+    }
+
+    function setProgress(e) {
+        const rect = progressBarDiv.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const percent = offsetX / rect.width;
+        if(audio.duration) {
+            audio.currentTime = percent * audio.duration;
+        }
+    }
+
+    function nextTrack() {
+        if(!currentPlaylist.length) return;
+        currentIndex = (currentIndex + 1) % currentPlaylist.length;
+        loadCurrentSong();
+        if(isPlaying) {
+            audio.play().catch(e=>console.log);
+        }
+    }
+
+    function prevTrack() {
+        if(!currentPlaylist.length) return;
+        currentIndex = (currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+        loadCurrentSong();
+        if(isPlaying) {
+            audio.play().catch(e=>console.log);
+        }
+    }
+
+    function togglePlayPause() {
+        if(!currentPlaylist.length) {
+            const defaultList = filterSongs();
+            if(defaultList.length) setPlaylistAndPlay(defaultList, 0, true);
+            return;
+        }
+        if(isPlaying) {
+            audio.pause();
+            isPlaying = false;
+        } else {
+            audio.play().catch(e=>console.log);
+            isPlaying = true;
+        }
+        updatePlayPauseIcon();
+    }
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', () => {
+        nextTrack();
+    });
+    audio.addEventListener('play', () => { isPlaying = true; updatePlayPauseIcon(); });
+    audio.addEventListener('pause', () => { isPlaying = false; updatePlayPauseIcon(); });
+    audio.addEventListener('error', (e) => {
+        console.error("Audio error:", e);
+        if(currentPlaylist[currentIndex]?.isSpecial) {
+            console.log("Özel şarkı yüklenemedi, diğer şarkıya geçiliyor...");
+            nextTrack();
+        }
+    });
+    
+    progressBarDiv.addEventListener('click', setProgress);
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    prevBtn.addEventListener('click', prevTrack);
+    nextBtn.addEventListener('click', nextTrack);
+    searchInput.addEventListener('input', () => filterAndRenderSongs());
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function init() {
+        renderCategories();
+        filterAndRenderSongs();
+        const allFiltered = filterSongs();
+        if(allFiltered.length) {
+            setPlaylistAndPlay(allFiltered, 0, false);
+        }
+    }
+    
+    init();
 </script>
 </body>
 </html>

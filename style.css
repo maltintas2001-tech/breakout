@@ -391,6 +391,39 @@ body {
 }
 .no-results i { font-size: 2rem; display: block; margin-bottom: 12px; opacity: 0.4; }
 
+/* ─── SKELETON LOADING ─── */
+.skeleton-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  border: 1px solid transparent;
+}
+.skeleton-card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #1a1a24 25%, #222232 50%, #1a1a24 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+.skeleton-card::after {
+  content: '';
+  display: block;
+  height: 10px;
+  border-radius: 4px;
+  width: 70%;
+  background: linear-gradient(90deg, #1a1a24 25%, #222232 50%, #1a1a24 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite 0.2s;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ══════════════════════════════════
    PLAYER BAR
 ══════════════════════════════════ */

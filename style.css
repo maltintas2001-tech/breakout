@@ -352,22 +352,13 @@ body {
   color: var(--accent);
 }
 
-.play-overlay {
-  position: absolute;
-  bottom: 10px; right: 10px;
-  width: 40px; height: 40px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.95rem; color: #000;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: all 0.2s cubic-bezier(.25,.8,.25,1);
-  box-shadow: 0 6px 20px rgba(29,185,84,0.45);
-  z-index: 2;
-}
+.play-overlay { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: #000; opacity: 0; transform: translateY(6px); transition: all 0.2s cubic-bezier(.25,.8,.25,1); box-shadow: 0 6px 20px rgba(29,185,84,0.45); z-index: 2; }
 .music-card:hover .play-overlay { opacity: 1; transform: translateY(0); }
 .play-overlay.playing-indicator { opacity: 1; transform: translateY(0); background: var(--accent2); }
+@media (hover: none) {
+  /* Dokunmatik ekranlarda play overlay her zaman görünür */
+  .play-overlay { opacity: 1; transform: translateY(0); }
+}
 
 .badge-row {
   position: absolute;
@@ -674,122 +665,80 @@ body::after {
 }
 
 /* ══════════════════════════════════
-   MOBILE BOTTOM NAV
+   MOBILE BOTTOM NAV — sadece mobilde görünür
 ══════════════════════════════════ */
-.mobile-nav {
-  display: none;
-}
-@media (max-width: 640px) {
-  .mobile-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 200;
-    background: rgba(8,8,14,0.97);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    height: 56px;
-  }
-  .mobile-nav-item {
-    flex: 1;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 3px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    transition: color 0.15s;
-  }
-  .mobile-nav-item i { font-size: 1.15rem; }
-  .mobile-nav-item.active { color: var(--accent); }
-  .mobile-nav-item:hover { color: var(--text-primary); }
+.mobile-nav { display: none; }
 
-  /* Player + mobile nav stack: player above mobile nav */
-  .player {
-    bottom: 56px;
-    position: fixed;
-    left: 0; right: 0;
-  }
-  body {
-    grid-template-rows: 1fr;
-    padding-bottom: calc(76px + 56px);
-    overflow-y: auto;
-    height: auto;
-    min-height: 100vh;
-  }
-  .main {
-    overflow-y: visible;
-    height: auto;
-  }
+/* ══════════════════════════════════
+   RESPONSIVE — Tablet (≤ 900px)
+══════════════════════════════════ */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 200px; }
+  .main-topbar { padding: 12px 20px; }
+  .topbar-nav { display: none; }
+  .search-wrap { max-width: 220px; }
+  .user-name { display: none; }
+  .hero { padding: 24px 20px 18px; }
+  .hero-title { font-size: 1.9rem; }
+  .cat-row { padding: 0 20px; }
+  .section { padding: 0 20px 28px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  .player { padding: 0 16px; }
+  .lyrics-panel { width: 320px; }
 }
 
 /* ══════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — Mobil (≤ 640px)
+   Mimari: body normal akış, player + mobile-nav position:fixed
 ══════════════════════════════════ */
-
-/* ─── Tablet (900px altı) ─── */
-@media (max-width: 900px) {
-  :root { --sidebar-w: 200px; }
-
-  .main-topbar { padding: 12px 20px; gap: 10px; }
-  .topbar-nav { display: none; }
-  .search-wrap { max-width: 240px; }
-  .user-name { display: none; }
-
-  .hero { padding: 24px 20px 18px; }
-  .hero-title { font-size: 1.9rem; }
-
-  .cat-row { padding: 0 20px; gap: 6px; }
-  .section { padding: 0 20px 28px; }
-  .card-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 14px; }
-
-  .player { padding: 0 16px; gap: 10px; grid-template-columns: 1fr 2fr 1fr; }
-  .lyrics-panel { width: 100%; border-left: none; }
-}
-
-/* ─── Mobil (640px altı) ─── */
 @media (max-width: 640px) {
+
+  /* ── Body: grid'i iptal et, normal sayfa akışına geç ── */
   body {
-    grid-template-rows: 1fr 76px;
-    grid-template-columns: 1fr;
-    overflow: hidden;
+    display: block;          /* grid'i tamamen kapat */
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Alt kısımda player (68px) + bottom nav (58px) = 126px boşluk */
+    padding-bottom: 126px;
   }
 
-  /* Sidebar gizle, mobil bottom nav göster */
+  /* ── Sidebar: tamamen gizle ── */
   .sidebar { display: none; }
 
+  /* ── Main: tam genişlik, normal akış ── */
   .main {
-    grid-column: 1;
-    grid-row: 1;
-    padding-bottom: 0;
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    grid-row: unset;
+    grid-column: unset;
   }
 
-  /* Topbar */
+  /* ── Topbar ── */
   .main-topbar {
-    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    padding: 10px 14px;
     gap: 8px;
-    flex-wrap: nowrap;
   }
   .topbar-nav { display: none; }
-  .search-wrap {
-    flex: 1;
-    max-width: none;
-    min-width: 0;
-  }
-  .search-input { font-size: 0.82rem; padding: 8px 12px 8px 34px; }
-  .user-pill { padding: 4px 8px 4px 4px; }
+  .search-wrap { flex: 1; max-width: none; min-width: 0; }
+  .search-input { font-size: 0.83rem; padding: 8px 12px 8px 34px; }
+  .user-pill { padding: 4px 8px 4px 4px; flex-shrink: 0; }
   .user-name { display: none; }
   .user-avatar { width: 26px; height: 26px; font-size: 0.7rem; }
 
-  /* Hero */
-  .hero { padding: 20px 16px 14px; }
+  /* ── Hero ── */
+  .hero { padding: 18px 16px 12px; }
   .greeting { font-size: 0.78rem; }
-  .hero-title { font-size: 1.65rem; letter-spacing: -0.6px; margin-bottom: 16px; }
+  .hero-title { font-size: 1.6rem; letter-spacing: -0.6px; margin-bottom: 14px; }
 
-  /* Category pills - yatay scroll */
+  /* ── Kategori satırı: yatay scroll ── */
   .cat-row {
-    padding: 0 16px;
+    padding: 0 16px 4px;
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -805,70 +754,107 @@ body::after {
     white-space: nowrap;
   }
 
-  /* Sections */
-  .section { padding: 0 16px 24px; }
-  .section-hd h2 { font-size: 1.1rem; }
+  /* ── Bölümler ── */
+  .section { padding: 0 16px 22px; }
+  .section-hd { margin-bottom: 14px; }
+  .section-hd h2 { font-size: 1.05rem; }
 
-  /* Card grid - 2 kolon */
+  /* ── Kart grid: 2 kolon ── */
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .music-card { padding: 10px; }
-  .card-title { font-size: 0.82rem; }
-  .card-artist { font-size: 0.7rem; }
-  .thumb-placeholder { font-size: 1.8rem; }
-  .play-overlay { width: 34px; height: 34px; font-size: 0.85rem; }
-
-  /* Player bar - compact */
-  .player {
-    grid-column: 1;
-    grid-row: 2;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: 1fr;
-    padding: 0 14px;
     gap: 10px;
-    height: 76px;
   }
-  .player-track {
-    min-width: 0;
-    flex: 1;
+  .music-card { padding: 10px; border-radius: 12px; }
+  .card-thumb { border-radius: 8px; margin-bottom: 9px; }
+  .card-title { font-size: 0.8rem; }
+  .card-artist { font-size: 0.68rem; }
+  .thumb-placeholder { font-size: 1.8rem; }
+  .play-overlay { width: 32px; height: 32px; font-size: 0.82rem; bottom: 8px; right: 8px; }
+
+  /* ── Player bar: position:fixed, altta player'ın üstünde ──
+     Yükseklik: 68px, bottom-nav'ın (58px) hemen üstünde          */
+  .player {
+    position: fixed;
+    bottom: 58px;   /* bottom nav yüksekliği */
+    left: 0; right: 0;
+    height: 68px;
+    grid-row: unset;
+    grid-column: unset;
+    /* Mobilde: [kapak+bilgi] [kontroller] — sağ panel yok */
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 12px;
+    z-index: 150;
   }
-  .player-art { width: 42px; height: 42px; }
+
+  .player-track { flex: 1; min-width: 0; gap: 10px; }
+  .player-art { width: 44px; height: 44px; flex-shrink: 0; }
   .player-art-icon { font-size: 1rem; }
-  .player-song { font-size: 0.82rem; }
+  .player-meta { min-width: 0; flex: 1; }
+  .player-song { font-size: 0.83rem; }
   .player-artist { font-size: 0.7rem; }
   .heart-btn { display: none; }
 
-  /* Kontroller mobilde sağa al */
-  .player-controls {
-    gap: 4px;
-  }
+  /* Kontroller: sadece prev/play/next */
+  .player-controls { flex-shrink: 0; gap: 0; }
   .progress-row { display: none; }
-  .ctrl-row { gap: 16px; }
-  .ctrl-btn { font-size: 1rem; }
-  .play-btn { width: 36px; height: 36px; font-size: 0.88rem; }
-
-  /* shuffleBtn ve repeatBtn'i gizle mobilde */
+  .ctrl-row { gap: 14px; }
+  .ctrl-btn { font-size: 1rem; padding: 6px; }
+  .play-btn { width: 38px; height: 38px; font-size: 0.95rem; }
   #shuffleBtn, #repeatBtn { display: none; }
 
-  /* Player right - sadece lyrics butonu */
-  .player-right { gap: 8px; }
+  /* Sağ panel: sadece lyrics butonu */
+  .player-right { gap: 6px; flex-shrink: 0; }
   .vol-wrap { display: none; }
+  .lyrics-toggle-btn { padding: 8px; font-size: 1rem; }
 
-  /* Lyrics panel tam ekran */
+  /* ── Lyrics panel: tam ekran, player+nav'ın üstünde ── */
   .lyrics-panel {
     width: 100%;
-    height: calc(100vh - 76px);
+    height: calc(100vh - 68px - 58px);
+    top: 0;
+    bottom: calc(68px + 58px);
     border-left: none;
   }
+
+  /* ── Mobil bottom nav ── */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 58px;
+    z-index: 160;
+    background: rgba(7,7,12,0.98);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border);
+  }
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-nav-item i { font-size: 1.1rem; }
+  .mobile-nav-item.active { color: var(--accent); }
 }
 
-/* ─── Küçük telefon (380px altı) ─── */
-@media (max-width: 380px) {
+/* ══════════════════════════════════
+   RESPONSIVE — Küçük telefon (≤ 390px)
+══════════════════════════════════ */
+@media (max-width: 390px) {
   .hero-title { font-size: 1.4rem; }
-  .card-grid { gap: 10px; }
+  .card-grid { gap: 8px; }
   .music-card { padding: 8px; }
-  .ctrl-row { gap: 12px; }
-  .search-input { font-size: 0.78rem; }
+  .ctrl-row { gap: 10px; }
+  .main-topbar { padding: 9px 12px; }
 }

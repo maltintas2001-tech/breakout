@@ -611,10 +611,13 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase.js"></script>
 <script src="data.js"></script>
 <script>
 // ═══════════════════════════════════════════════
-//  admin.js — Admin Panel Mantığı
+//  admin.js — Supabase entegrasyonlu Admin Panel
 // ═══════════════════════════════════════════════
 
 const ICONS = [
@@ -630,8 +633,8 @@ const ICONS = [
   'fa-hand-fist','fa-street-view','fa-user-ninja','fa-masks-theater'
 ];
 
-let songs       = window.loadSongs();
-let editingId   = null;   // null = yeni şarkı
+let songs      = [];
+let editingId  = null;
 let verseCounter = 0;
 
 // ─── TOAST ────────────────────────────────────────
@@ -653,9 +656,7 @@ function renderSongList() {
   const wrap = document.getElementById('songListWrap');
   wrap.innerHTML = songs.map(s => `
     <div class="song-row ${editingId === s.id ? 'active' : ''}" data-id="${s.id}">
-      <div class="song-row-icon">
-        <i class="fas ${s.icon || 'fa-music'}"></i>
-      </div>
+      <div class="song-row-icon"><i class="fas ${s.icon || 'fa-music'}"></i></div>
       <div class="song-row-info">
         <div class="song-row-title">${esc(s.title)}</div>
         <div class="song-row-artist">${esc(s.artist)}</div>
@@ -722,8 +723,7 @@ function getLyrics() {
   document.querySelectorAll('#lyricsBuilder .verse-card').forEach(card => {
     const label = card.querySelector('.verse-label-input').value.trim() || 'Bölüm';
     const raw   = card.querySelector('.verse-textarea').value;
-    const lines = raw.split('\n');
-    verses.push({ label, lines });
+    verses.push({ label, lines: raw.split('\n') });
   });
   return verses;
 }
@@ -737,22 +737,14 @@ function bindPreviewListeners() {
   const catEl     = document.getElementById('fCategory');
 
   function updatePreview() {
-    const title = titleEl.value || 'Şarkı Adı';
-    const artist = artistEl.value || 'Sanatçı';
-    const exclusive = exclusiveEl.checked;
-    const diss = dissEl.checked;
-    const cat = catEl.value;
-
-    document.getElementById('previewTitle').textContent = title;
-    document.getElementById('previewArtist').textContent = artist;
-
+    document.getElementById('previewTitle').textContent  = titleEl.value || 'Şarkı Adı';
+    document.getElementById('previewArtist').textContent = artistEl.value || 'Sanatçı';
     const badges = [];
-    if (exclusive) badges.push(`<span class="pbadge pbadge-exclusive">Exclusive</span>`);
-    if (diss) badges.push(`<span class="pbadge pbadge-diss">Diss</span>`);
-    badges.push(`<span class="pbadge pbadge-cat">${cat}</span>`);
+    if (exclusiveEl.checked) badges.push(`<span class="pbadge pbadge-exclusive">Exclusive</span>`);
+    if (dissEl.checked) badges.push(`<span class="pbadge pbadge-diss">Diss</span>`);
+    badges.push(`<span class="pbadge pbadge-cat">${catEl.value}</span>`);
     document.getElementById('previewBadges').innerHTML = badges.join('');
   }
-
   [titleEl, artistEl, catEl].forEach(el => el.addEventListener('input', updatePreview));
   [exclusiveEl, dissEl].forEach(el => el.addEventListener('change', updatePreview));
   updatePreview();
@@ -771,12 +763,10 @@ function resetForm() {
   document.getElementById('fDiss').checked   = false;
   document.getElementById('lyricsBuilder').innerHTML = '';
   verseCounter = 0;
-
   document.getElementById('panelTitle').innerHTML = '<span>+</span> Yeni Şarkı';
   document.getElementById('deleteBtn').style.display = 'none';
-  document.getElementById('formBody').style.display = '';
+  document.getElementById('formBody').style.display  = '';
   document.getElementById('emptyState').style.display = 'none';
-
   renderIconPicker('fa-music');
   renderSongList();
   bindPreviewListeners();
@@ -787,7 +777,6 @@ function loadSongIntoForm(id) {
   const s = songs.find(x => x.id === id);
   if (!s) return;
   editingId = id;
-
   document.getElementById('fTitle').value    = s.title || '';
   document.getElementById('fArtist').value   = s.artist || '';
   document.getElementById('fCategory').value = s.category || 'ridvani';
@@ -796,38 +785,34 @@ function loadSongIntoForm(id) {
   document.getElementById('fIcon').value     = s.icon || 'fa-music';
   document.getElementById('fExclusive').checked = !!s.exclusive;
   document.getElementById('fDiss').checked   = !!s.diss;
-
-  // Lyrics
   document.getElementById('lyricsBuilder').innerHTML = '';
   verseCounter = 0;
   (s.lyrics || []).forEach(v => addVerse(v.label, (v.lines || []).join('\n')));
-
   document.getElementById('panelTitle').innerHTML = `<span>✏️</span> ${esc(s.title)} — Düzenle`;
   document.getElementById('deleteBtn').style.display = '';
   document.getElementById('formBody').style.display  = '';
   document.getElementById('emptyState').style.display = 'none';
-
   renderIconPicker(s.icon || 'fa-music');
   renderSongList();
   bindPreviewListeners();
-
-  // Scroll to top
   document.querySelector('.main-panel').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ─── SAVE ─────────────────────────────────────────
-document.getElementById('saveBtn').addEventListener('click', () => {
+// ─── SAVE (async) ─────────────────────────────────
+document.getElementById('saveBtn').addEventListener('click', async () => {
   const title  = document.getElementById('fTitle').value.trim();
   const artist = document.getElementById('fArtist').value.trim();
   const src    = document.getElementById('fSrc').value.trim();
-
   if (!title || !artist || !src) {
     toast('⚠ Şarkı adı, sanatçı ve MP3 URL zorunlu!', 'error');
     return;
   }
 
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Kaydediliyor…';
+
   const songData = {
-    id:        editingId || Date.now(),
     title,
     artist,
     category:  document.getElementById('fCategory').value,
@@ -836,44 +821,60 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     icon:      document.getElementById('fIcon').value || 'fa-music',
     exclusive: document.getElementById('fExclusive').checked,
     diss:      document.getElementById('fDiss').checked,
-    lyrics:    getLyrics()
+    lyrics:    getLyrics(),
   };
 
-  if (editingId) {
-    const idx = songs.findIndex(s => s.id === editingId);
-    if (idx !== -1) songs[idx] = songData;
-  } else {
-    songs.push(songData);
+  try {
+    if (editingId) {
+      await window.updateSong(editingId, songData);
+      const i = songs.findIndex(s => s.id === editingId);
+      if (i !== -1) songs[i] = { ...songs[i], ...songData };
+      toast('✅ Şarkı güncellendi!');
+    } else {
+      const newRow = await window.insertSong(songData);
+      editingId = newRow.id;
+      songs.push({ ...songData, id: newRow.id });
+      toast('🎵 Şarkı eklendi!');
+    }
+    document.getElementById('panelTitle').innerHTML = `<span>✏️</span> ${esc(title)} — Düzenle`;
+    document.getElementById('deleteBtn').style.display = '';
+    renderSongList();
+  } catch(e) {
+    toast('❌ Hata: ' + e.message, 'error');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fas fa-floppy-disk"></i> Kaydet';
   }
-
-  window.saveSongs(songs);
-  toast(editingId ? '✅ Şarkı güncellendi!' : '🎵 Şarkı eklendi!');
-
-  editingId = songData.id;
-  document.getElementById('panelTitle').innerHTML = `<span>✏️</span> ${esc(title)} — Düzenle`;
-  document.getElementById('deleteBtn').style.display = '';
-  renderSongList();
 });
 
-// ─── DELETE ───────────────────────────────────────
-document.getElementById('deleteBtn').addEventListener('click', () => {
+// ─── DELETE (async) ───────────────────────────────
+document.getElementById('deleteBtn').addEventListener('click', async () => {
   if (!editingId) return;
   const s = songs.find(x => x.id === editingId);
   if (!confirm(`"${s?.title}" silinecek. Emin misin?`)) return;
-  songs = songs.filter(x => x.id !== editingId);
-  window.saveSongs(songs);
-  toast('🗑 Şarkı silindi.', 'info');
-  resetForm();
+
+  try {
+    await window.deleteSongFromDB(editingId);
+    songs = songs.filter(x => x.id !== editingId);
+    toast('🗑 Şarkı silindi.', 'info');
+    resetForm();
+  } catch(e) {
+    toast('❌ Silinemedi: ' + e.message, 'error');
+  }
 });
 
-function deleteSong(id) {
+async function deleteSong(id) {
   const s = songs.find(x => x.id === id);
   if (!confirm(`"${s?.title}" silinecek. Emin misin?`)) return;
-  songs = songs.filter(x => x.id !== id);
-  window.saveSongs(songs);
-  toast('🗑 Şarkı silindi.', 'info');
-  if (editingId === id) resetForm();
-  else renderSongList();
+  try {
+    await window.deleteSongFromDB(id);
+    songs = songs.filter(x => x.id !== id);
+    toast('🗑 Şarkı silindi.', 'info');
+    if (editingId === id) resetForm();
+    else renderSongList();
+  } catch(e) {
+    toast('❌ Silinemedi: ' + e.message, 'error');
+  }
 }
 
 // ─── ADD NEW + ADD VERSE ──────────────────────────
@@ -882,29 +883,28 @@ document.getElementById('addVerseBtn').addEventListener('click', () => addVerse(
 
 // ─── UTILS ────────────────────────────────────────
 function esc(str) {
-  return String(str || '').replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-  }[m]));
+  return String(str || '').replace(/[&<>"']/g, m =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
 
 // ─── AUTH ─────────────────────────────────────────
 (function() {
-  const ADMIN_PASS = 'ridvani2024'; // Şifreyi buradan değiştirebilirsin
+  const ADMIN_PASS = 'ridvani2024';
   const SESSION_KEY = 'ridvanify_admin_auth';
-
-  const overlay  = document.getElementById('authOverlay');
-  const input    = document.getElementById('authInput');
-  const btn      = document.getElementById('authBtn');
-  const errEl    = document.getElementById('authErr');
+  const overlay = document.getElementById('authOverlay');
+  const input   = document.getElementById('authInput');
+  const btn     = document.getElementById('authBtn');
+  const errEl   = document.getElementById('authErr');
 
   function tryLogin() {
     if (input.value === ADMIN_PASS) {
       sessionStorage.setItem(SESSION_KEY, '1');
       overlay.style.display = 'none';
+      adminInit();
     } else {
       errEl.textContent = 'Yanlış şifre. Tekrar dene.';
       input.classList.remove('shake');
-      void input.offsetWidth; // reflow
+      void input.offsetWidth;
       input.classList.add('shake');
       input.value = '';
       setTimeout(() => { errEl.textContent = ''; input.classList.remove('shake'); }, 2000);
@@ -913,6 +913,7 @@ function esc(str) {
 
   if (sessionStorage.getItem(SESSION_KEY) === '1') {
     overlay.style.display = 'none';
+    adminInit();
   }
 
   btn.addEventListener('click', tryLogin);
@@ -920,9 +921,23 @@ function esc(str) {
   setTimeout(() => input.focus(), 100);
 })();
 
-// ─── INIT ─────────────────────────────────────────
-renderIconPicker();
-resetForm();
+// ─── ADMIN INIT (async) ───────────────────────────
+async function adminInit() {
+  renderIconPicker();
+
+  // Yükleniyor göster
+  document.getElementById('songListWrap').innerHTML =
+    '<div style="padding:20px;text-align:center;color:var(--text-3);font-size:0.82rem;">Yükleniyor…</div>';
+
+  try {
+    songs = await window.loadSongsFromDB();
+  } catch(e) {
+    toast('❌ Şarkılar yüklenemedi: ' + e.message, 'error');
+    songs = [];
+  }
+
+  resetForm();
+}
 </script>
 </body>
 </html>

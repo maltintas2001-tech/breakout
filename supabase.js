@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════
 
 const SUPABASE_URL  = 'https://fqkoixutvmhkasrhxgwi.supabase.co';       // örn: https://xyzabc.supabase.co
-const SUPABASE_ANON = 'BURAYA_SUPABASE_ANON_KEY';  // Project Settings > API > anon public
+const SUPABASE_ANON = 'sb_publishable_ElLo4DoUVigLdnpDPxhPmA_pwfZci2U';  // Project Settings > API > anon public
 
 // Supabase istemcisini global yap (CDN'den gelecek)
 // index.html ve admin.html'de <script> ile yükleniyor

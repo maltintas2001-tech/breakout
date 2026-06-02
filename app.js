@@ -3,15 +3,23 @@
 //  Bağımlılık: data.js (window.SONGS)
 // ═══════════════════════════════════════════════
 
-const CATEGORIES  = ["Tümü", "ridvani", "pop", "soul", "rnb", "funk", "hiphop"];
+const CATEGORIES  = ["Tümü", "ridvani", "pop", "soul", "rnb", "funk", "hiphop", "deephouse", "afrohouse", "afro", "electronic", "jazz", "reggaeton", "latin", "classical"];
 const CAT_LABELS  = {
-  "Tümü": "🔥 Tümü",
-  "ridvani": "👑 Ridvani",
-  "pop": "Pop",
-  "soul": "Soul",
-  "rnb": "R&B",
-  "funk": "Funk",
-  "hiphop": "Hip Hop"
+  "Tümü":       "🔥 Tümü",
+  "ridvani":    "👑 Ridvani",
+  "pop":        "🎤 Pop",
+  "soul":       "🎶 Soul",
+  "rnb":        "🎵 R&B",
+  "funk":       "🎸 Funk",
+  "hiphop":     "🎧 Hip Hop",
+  "deephouse":  "🌊 Deep House",
+  "afrohouse":  "🌍 Afro House",
+  "afro":       "🥁 Afro",
+  "electronic": "⚡ Electronic",
+  "jazz":       "🎷 Jazz",
+  "reggaeton":  "🔥 Reggaeton",
+  "latin":      "💃 Latin",
+  "classical":  "🎻 Classical"
 };
 
 // ─── STATE ───────────────────────────────────────
@@ -401,12 +409,25 @@ function init() {
 }
 
 // Admin panelinden dönüldüğünde veriyi senkronize et
+// NOT: storage event yalnızca BAŞKA sekmelerden gelir, aynı sekme tetiklemez.
+// Buradaki kontrol admin.html'den yapılan değişiklikler için geçerlidir.
 window.addEventListener('storage', e => {
-  if (e.key === 'ridvanify_songs') {
+  if (e.key === 'ridvanify_songs' && e.newValue !== null) {
+    const currentSong = playlist[idx] ? playlist[idx].id : null;
+    const wasPlaying = playing;
+
     window.SONGS = window.loadSongs();
     playlist = [...window.SONGS];
+
+    // Çalan şarkının index'ini koru
+    if (currentSong !== null) {
+      const newIdx = playlist.findIndex(s => s.id === currentSong);
+      if (newIdx !== -1) idx = newIdx;
+    }
+
     renderLibrary();
     renderGrids();
+    // Çalan şarkıyı durdurmadan sadece grid güncelle
   }
 });
 

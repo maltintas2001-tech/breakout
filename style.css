@@ -674,12 +674,201 @@ body::after {
 }
 
 /* ══════════════════════════════════
+   MOBILE BOTTOM NAV
+══════════════════════════════════ */
+.mobile-nav {
+  display: none;
+}
+@media (max-width: 640px) {
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(8,8,14,0.97);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    height: 56px;
+  }
+  .mobile-nav-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: color 0.15s;
+  }
+  .mobile-nav-item i { font-size: 1.15rem; }
+  .mobile-nav-item.active { color: var(--accent); }
+  .mobile-nav-item:hover { color: var(--text-primary); }
+
+  /* Player + mobile nav stack: player above mobile nav */
+  .player {
+    bottom: 56px;
+    position: fixed;
+    left: 0; right: 0;
+  }
+  body {
+    grid-template-rows: 1fr;
+    padding-bottom: calc(76px + 56px);
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .main {
+    overflow-y: visible;
+    height: auto;
+  }
+}
+
+/* ══════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════ */
+
+/* ─── Tablet (900px altı) ─── */
 @media (max-width: 900px) {
-  body { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .player { grid-template-columns: 1fr 1fr; }
-  .player-right { display: none; }
+  :root { --sidebar-w: 200px; }
+
+  .main-topbar { padding: 12px 20px; gap: 10px; }
+  .topbar-nav { display: none; }
+  .search-wrap { max-width: 240px; }
+  .user-name { display: none; }
+
+  .hero { padding: 24px 20px 18px; }
+  .hero-title { font-size: 1.9rem; }
+
+  .cat-row { padding: 0 20px; gap: 6px; }
+  .section { padding: 0 20px 28px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 14px; }
+
+  .player { padding: 0 16px; gap: 10px; grid-template-columns: 1fr 2fr 1fr; }
   .lyrics-panel { width: 100%; border-left: none; }
+}
+
+/* ─── Mobil (640px altı) ─── */
+@media (max-width: 640px) {
+  body {
+    grid-template-rows: 1fr 76px;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+
+  /* Sidebar gizle, mobil bottom nav göster */
+  .sidebar { display: none; }
+
+  .main {
+    grid-column: 1;
+    grid-row: 1;
+    padding-bottom: 0;
+  }
+
+  /* Topbar */
+  .main-topbar {
+    padding: 10px 16px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .topbar-nav { display: none; }
+  .search-wrap {
+    flex: 1;
+    max-width: none;
+    min-width: 0;
+  }
+  .search-input { font-size: 0.82rem; padding: 8px 12px 8px 34px; }
+  .user-pill { padding: 4px 8px 4px 4px; }
+  .user-name { display: none; }
+  .user-avatar { width: 26px; height: 26px; font-size: 0.7rem; }
+
+  /* Hero */
+  .hero { padding: 20px 16px 14px; }
+  .greeting { font-size: 0.78rem; }
+  .hero-title { font-size: 1.65rem; letter-spacing: -0.6px; margin-bottom: 16px; }
+
+  /* Category pills - yatay scroll */
+  .cat-row {
+    padding: 0 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 20px;
+    gap: 6px;
+  }
+  .cat-row::-webkit-scrollbar { display: none; }
+  .cat-pill {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  /* Sections */
+  .section { padding: 0 16px 24px; }
+  .section-hd h2 { font-size: 1.1rem; }
+
+  /* Card grid - 2 kolon */
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .music-card { padding: 10px; }
+  .card-title { font-size: 0.82rem; }
+  .card-artist { font-size: 0.7rem; }
+  .thumb-placeholder { font-size: 1.8rem; }
+  .play-overlay { width: 34px; height: 34px; font-size: 0.85rem; }
+
+  /* Player bar - compact */
+  .player {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr;
+    padding: 0 14px;
+    gap: 10px;
+    height: 76px;
+  }
+  .player-track {
+    min-width: 0;
+    flex: 1;
+  }
+  .player-art { width: 42px; height: 42px; }
+  .player-art-icon { font-size: 1rem; }
+  .player-song { font-size: 0.82rem; }
+  .player-artist { font-size: 0.7rem; }
+  .heart-btn { display: none; }
+
+  /* Kontroller mobilde sağa al */
+  .player-controls {
+    gap: 4px;
+  }
+  .progress-row { display: none; }
+  .ctrl-row { gap: 16px; }
+  .ctrl-btn { font-size: 1rem; }
+  .play-btn { width: 36px; height: 36px; font-size: 0.88rem; }
+
+  /* shuffleBtn ve repeatBtn'i gizle mobilde */
+  #shuffleBtn, #repeatBtn { display: none; }
+
+  /* Player right - sadece lyrics butonu */
+  .player-right { gap: 8px; }
+  .vol-wrap { display: none; }
+
+  /* Lyrics panel tam ekran */
+  .lyrics-panel {
+    width: 100%;
+    height: calc(100vh - 76px);
+    border-left: none;
+  }
+}
+
+/* ─── Küçük telefon (380px altı) ─── */
+@media (max-width: 380px) {
+  .hero-title { font-size: 1.4rem; }
+  .card-grid { gap: 10px; }
+  .music-card { padding: 8px; }
+  .ctrl-row { gap: 12px; }
+  .search-input { font-size: 0.78rem; }
 }

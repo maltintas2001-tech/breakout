@@ -364,9 +364,88 @@
       .form-row { grid-template-columns:1fr; }
       .form-row.triple { grid-template-columns:1fr 1fr; }
     }
+
+    /* ─── AUTH OVERLAY ─── */
+    #authOverlay {
+      position: fixed; inset: 0;
+      background: #08080d;
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif;
+    }
+    #authBox {
+      background: #111118;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    }
+    #authBox .auth-logo {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg,#1db954,#0a7a33);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #000;
+    }
+    #authBox h2 {
+      font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; text-align: center;
+    }
+    #authBox p {
+      font-size: 0.8rem; color: #535353; text-align: center; line-height: 1.5; margin-top: -8px;
+    }
+    #authInput {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      text-align: center;
+      letter-spacing: 0.1em;
+      transition: border-color 0.2s;
+    }
+    #authInput:focus { border-color: rgba(29,185,84,0.5); }
+    #authInput.shake {
+      animation: authShake 0.35s cubic-bezier(0.36,0.07,0.19,0.97);
+      border-color: #e53e3e;
+    }
+    #authBtn {
+      width: 100%; padding: 12px;
+      background: #1db954; border: none; border-radius: 10px;
+      color: #000; font-family: 'Sora', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
+    }
+    #authBtn:hover { background: #1ed760; transform: scale(1.02); }
+    #authErr {
+      font-size: 0.78rem; color: #e53e3e; min-height: 16px; text-align: center;
+    }
+    @keyframes authShake {
+      0%,100% { transform: translateX(0); }
+      20%,60% { transform: translateX(-8px); }
+      40%,80% { transform: translateX(8px); }
+    }
   </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════
+     AUTH OVERLAY
+═══════════════════════════════════ -->
+<div id="authOverlay">
+  <div id="authBox">
+    <div class="auth-logo"><i class="fas fa-lock"></i></div>
+    <h2>Admin Girişi</h2>
+    <p>Bu alana erişim yalnızca yetkili<br>kullanıcılara açıktır.</p>
+    <input type="password" id="authInput" placeholder="Şifre" autocomplete="current-password">
+    <div id="authErr"></div>
+    <button id="authBtn"><i class="fas fa-arrow-right-to-bracket"></i> Giriş Yap</button>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════
      SIDEBAR — Şarkı listesi
@@ -448,11 +527,19 @@
           <label>Kategori <span class="req">*</span></label>
           <select class="select" id="fCategory">
             <option value="ridvani">👑 Ridvani</option>
-            <option value="pop">Pop</option>
-            <option value="soul">Soul</option>
-            <option value="rnb">R&B</option>
-            <option value="funk">Funk</option>
-            <option value="hiphop">Hip Hop</option>
+            <option value="pop">🎤 Pop</option>
+            <option value="soul">🎶 Soul</option>
+            <option value="rnb">🎵 R&B</option>
+            <option value="funk">🎸 Funk</option>
+            <option value="hiphop">🎧 Hip Hop</option>
+            <option value="deephouse">🌊 Deep House</option>
+            <option value="afrohouse">🌍 Afro House</option>
+            <option value="afro">🥁 Afro</option>
+            <option value="electronic">⚡ Electronic</option>
+            <option value="jazz">🎷 Jazz</option>
+            <option value="reggaeton">🔥 Reggaeton</option>
+            <option value="latin">💃 Latin</option>
+            <option value="classical">🎻 Classical</option>
           </select>
         </div>
         <div class="field">
@@ -799,6 +886,39 @@ function esc(str) {
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   }[m]));
 }
+
+// ─── AUTH ─────────────────────────────────────────
+(function() {
+  const ADMIN_PASS = 'ridvani2024'; // Şifreyi buradan değiştirebilirsin
+  const SESSION_KEY = 'ridvanify_admin_auth';
+
+  const overlay  = document.getElementById('authOverlay');
+  const input    = document.getElementById('authInput');
+  const btn      = document.getElementById('authBtn');
+  const errEl    = document.getElementById('authErr');
+
+  function tryLogin() {
+    if (input.value === ADMIN_PASS) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      overlay.style.display = 'none';
+    } else {
+      errEl.textContent = 'Yanlış şifre. Tekrar dene.';
+      input.classList.remove('shake');
+      void input.offsetWidth; // reflow
+      input.classList.add('shake');
+      input.value = '';
+      setTimeout(() => { errEl.textContent = ''; input.classList.remove('shake'); }, 2000);
+    }
+  }
+
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    overlay.style.display = 'none';
+  }
+
+  btn.addEventListener('click', tryLogin);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+  setTimeout(() => input.focus(), 100);
+})();
 
 // ─── INIT ─────────────────────────────────────────
 renderIconPicker();

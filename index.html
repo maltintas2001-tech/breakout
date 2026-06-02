@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Ridvanify</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><i class="fas fa-music"></i></div>
+    <span class="logo-text">Ridvanify</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item active"><i class="fas fa-house"></i> Ana Sayfa</a>
+    <a class="nav-item"><i class="fas fa-search"></i> Keşfet</a>
+    <a class="nav-item"><i class="fas fa-fire"></i> Trendler</a>
+    <a class="nav-item" href="admin.html" target="_blank">
+      <i class="fas fa-sliders"></i> Admin Panel
+    </a>
+  </nav>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="library-header">
+    <span>Kütüphane</span>
+    <i class="fas fa-plus" style="color:var(--text-muted);cursor:pointer;font-size:0.9rem;"></i>
+  </div>
+
+  <div class="library-list" id="libraryList"></div>
+</aside>
+
+<!-- ═══════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════ -->
+<main class="main" id="mainContent">
+  <div class="main-topbar">
+    <div class="topbar-nav">
+      <button class="topbar-btn"><i class="fas fa-chevron-left"></i></button>
+      <button class="topbar-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input class="search-input" id="searchInput" type="text" placeholder="Sanatçı, şarkı veya albüm ara...">
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar">R</div>
+      <span class="user-name">Ridvani</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <p class="greeting" id="greetingText">Merhaba</p>
+    <h1 class="hero-title">Müziğin <span>kendi yolu</span><br>burada başlar.</h1>
+  </div>
+
+  <div class="cat-row" id="catRow"></div>
+
+  <div class="section">
+    <div class="section-hd">
+      <h2 id="section1Title">🔥 Ridvani Exclusive</h2>
+      <span class="see-all">Tümünü gör</span>
+    </div>
+    <div class="card-grid" id="grid1"></div>
+  </div>
+
+  <div class="section" id="section2Wrap">
+    <div class="section-hd">
+      <h2>🎧 Günün Hitleri</h2>
+      <span class="see-all">Tümünü gör</span>
+    </div>
+    <div class="card-grid" id="grid2"></div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     LYRICS PANEL
+═══════════════════════════════════ -->
+<div class="lyrics-panel" id="lyricsPanel">
+  <div class="lyrics-panel-header">
+    <div class="lyrics-panel-title">
+      <span class="lyrics-panel-label">Şarkı Sözleri</span>
+      <div class="lyrics-panel-song" id="lyricsPanelSong">—</div>
+      <div class="lyrics-panel-artist" id="lyricsPanelArtist"></div>
+    </div>
+    <button class="lyrics-close" id="lyricsClose"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="lyrics-art-strip">
+    <div class="lyrics-art" id="lyricsArt">
+      <div class="lyrics-art-icon"><i class="fas fa-music"></i></div>
+    </div>
+    <div class="lyrics-art-info">
+      <div class="song-name" id="lyricsSongName">Şarkı seçilmedi</div>
+      <div class="artist-name" id="lyricsArtistName">Ridvanify</div>
+    </div>
+  </div>
+  <div class="lyrics-content" id="lyricsContent">
+    <div class="lyrics-empty">
+      <i class="fas fa-microphone-slash"></i>
+      <p>Bir şarkı seçerek<br>sözleri görüntüle.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     PLAYER BAR
+═══════════════════════════════════ -->
+<div class="player" id="player">
+  <!-- Sol: parça bilgisi -->
+  <div class="player-track">
+    <div class="player-art" id="playerArt">
+      <div class="player-art-icon"><i class="fas fa-music"></i></div>
+    </div>
+    <div class="player-meta">
+      <div class="player-song" id="playerSong">Şarkı seçilmedi</div>
+      <div class="player-artist" id="playerArtist">Ridvanify'da keşfet</div>
+    </div>
+    <button class="heart-btn" id="heartBtn"><i class="fas fa-heart"></i></button>
+  </div>
+
+  <!-- Orta: kontroller -->
+  <div class="player-controls">
+    <div class="ctrl-row">
+      <button class="ctrl-btn" id="shuffleBtn" title="Karıştır"><i class="fas fa-shuffle"></i></button>
+      <button class="ctrl-btn" id="prevBtn"><i class="fas fa-backward-step"></i></button>
+      <button class="play-btn" id="playBtn"><i class="fas fa-play"></i></button>
+      <button class="ctrl-btn" id="nextBtn"><i class="fas fa-forward-step"></i></button>
+      <button class="ctrl-btn" id="repeatBtn" title="Tekrar"><i class="fas fa-repeat"></i></button>
+    </div>
+    <div class="progress-row">
+      <span class="time" id="timeCurrent">0:00</span>
+      <div class="progress-track" id="progressTrack">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span class="time time-right" id="timeTotal">0:00</span>
+    </div>
+  </div>
+
+  <!-- Sağ: ses ve söz -->
+  <div class="player-right">
+    <button class="lyrics-toggle-btn" id="lyricsToggleBtn" title="Şarkı Sözleri">
+      <i class="fas fa-microphone"></i>
+    </button>
+    <div class="vol-wrap">
+      <button class="vol-icon" id="volIcon"><i class="fas fa-volume-high"></i></button>
+      <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="75">
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════ -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
